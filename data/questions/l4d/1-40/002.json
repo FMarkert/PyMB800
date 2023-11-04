@@ -1,0 +1,16 @@
+{
+    "id": 2,
+    "src":"l4d",
+    "type": "multiple_choice",
+    "question_text": "You need to set up payment terms for buying groups. /nWhich two actions should you perform? /nEach correct answer presents part of the solution. /nNOTE: Each correct selection is worth one point.",
+    "items": {
+      "A":"Set up payment terms with a value of CM+20D for the due date calculation.",
+      "B":"Assign the payment terms to the customer price group.",
+      "C":"Assign the payment terms to the customer.",
+      "D": "Assign the payment terms to the customer posting group.",
+      "E": "Set up payment terms with a value of D20 for the due date calculation."
+    },
+    "correct_answer": ["A","C"],
+    "comment": "",
+    "casestudy":"" 
+  }
