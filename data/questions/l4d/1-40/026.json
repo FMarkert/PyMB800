@@ -2,7 +2,7 @@
     "id": 26,
     "src":"l4d",
     "type": "drag_drop_pairs",
-    "question_text": "You set up a new company for a customer. /nThe customer provides you with the chart of accounts and the preferred grouping of items, vendors, and customers. /nYou must ensure that item posting corresponds with the grouping preferences and chart of accounts for the customer. /nYou need to create the posting groups and setup. /nWhich type of posting groups should you create? /nTo answer, drag the appropriate posting group types to the correct entities. /nEach posting group type may be used once, more than once, or not at all.",
+    "question_text": "You set up a new company for a customer. \nThe customer provides you with the chart of accounts and the preferred grouping of items, vendors, and customers. \nYou must ensure that item posting corresponds with the grouping preferences and chart of accounts for the customer. \nYou need to create the posting groups and setup. \nWhich type of posting groups should you create? \nTo answer, drag the appropriate posting group types to the correct entities. \nEach posting group type may be used once, more than once, or not at all.",
     "pairs":{
         "Customer Posting Group": "Specific posting group",
         "VAT Product Poting Group": "Tax posting groups",

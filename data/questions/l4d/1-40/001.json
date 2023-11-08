@@ -2,7 +2,7 @@
     "id": 1,
     "src":"l4d",
     "type": "drag_drop_order",
-    "question_text": "You need to design a process to resolve the broker issues for Accounts. n/Which three actions should perform in sequence? n/To answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order. n/NOTE: More than one order of answer choices is correct. n/You will receive credit for any of the correct orders you select.",
+    "question_text": "You need to design a process to resolve the broker issues for Accounts. \nWhich three actions should perform in sequence? \nTo answer, move the appropriate actions from the list of actions to the answer area and arrange them in the correct order. \nNOTE: More than one order of answer choices is correct. \nYou will receive credit for any of the correct orders you select.",
     "items": ["Create a No. Series.","Create the Data template.","Define the No. Series on the configuration template."],
     "correct_answer": ["Create a No. Series.","Create the Data template.","Define the No. Series on the configuration template."],
     "comment": "",

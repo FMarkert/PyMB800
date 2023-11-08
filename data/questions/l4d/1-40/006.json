@@ -2,7 +2,7 @@
     "id": 6,
     "src":"l4d",
     "type": "dropdown",
-    "question_text": "You need to create the process for salespeople. /nWhat should you do? To answer, select the appropriate options in the answer area. /nNOTE: Each correct selection is worth one point.",
+    "question_text": "You need to create the process for salespeople. \nWhat should you do? To answer, select the appropriate options in the answer area. \nNOTE: Each correct selection is worth one point.",
     "items": [
         {
             "text": "Deliver on a specific customer date ",
