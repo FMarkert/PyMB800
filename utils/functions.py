@@ -1,7 +1,7 @@
 import json
 import os 
 
-def gamemode_directory(gamemode): # Bestimmt passendes Verzeichnis mit Fragen anhand des gewählten Spielmodus aus
+def gamemode_directory(gamemode): # Bestimmt passendes Verzeichnis mit Fragen anhand des gewählten Spielmodus
 
     if gamemode == "l4d_1-40":
         mode_directory = ['l4d', '1-40']
