@@ -18,7 +18,9 @@ class Base_Question:
         pass 
     
     def display_casestudy(self):
-        pass 
+        pass
+
+
 
 
 class Drag_Drop_Order(Base_Question):
@@ -28,21 +30,20 @@ class Drag_Drop_Order(Base_Question):
         self.correct_answer = correct_answer
         print("Drag_Drop_Order Frage erstellet") #Test
     def check_answer(self, user_answer):
-        pass
+        return user_answer == self.correct_answer
+
     
 class Drag_Drop_Pairs(Base_Question):
     def __init__(self,pairs):
         super().__init__()
         self.pairs = pairs 
-    def check_answer(self, user_answer):
-        pass
+
 
 class Dropdown(Base_Question):
     def __init__(self,items):
         super().__init__()
         self.items = items 
-    def check_answer(self, user_answer):
-        pass
+
 
 class Multiple_Choice(Base_Question):
     def __init__(self,items):
@@ -50,9 +51,7 @@ class Multiple_Choice(Base_Question):
         self.items = items 
         print("MC Frage erstellt") #Test
     def check_answer(self, user_answer):
-        pass
+        return user_answer == self.correct_answer
 
-class Yes_No(Multiple_Choice):
-    print("Y/N Frage erstellt") #Test
-    pass 
+
 
