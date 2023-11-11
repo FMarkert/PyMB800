@@ -6,15 +6,14 @@
     "items": [
         {
             "text": "Deliver on a specific customer date ",
-            "options": ["View the Location Code for available inventory","View the Item Availability by Periods","Check the Catalog on the Sales Line Details"],
-            "answer": ["View the Item Availability by Periods"]
+            "options": ["View the Location Code for available inventory","View the Item Availability by Periods","Check the Catalog on the Sales Line Details"]
         },
       {
         "text": "Deliver on a specific customer date ",
-        "options": ["Choose Make Invoice", "Choose Copy Document", "Choose Make Order"],
-        "answer": ["Choose Make Order"]
+        "options": ["Choose Make Invoice", "Choose Copy Document", "Choose Make Order"]
       }
     ],
+    "correct_answer": ["View the Item Availability by Periods","Choose Make Order"],
     "comment": "",
     "casestudy": ""
   }

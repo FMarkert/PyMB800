@@ -24,4 +24,5 @@ def gamemode_directory(gamemode): # Bestimmt passendes Verzeichnis mit Fragen an
     directory = os.path.join("/".join(mode_path))
     return directory
 
-
+def json_to_object(directory): # Wandelt JSONs zu Objekten
+    pass 
