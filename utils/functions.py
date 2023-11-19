@@ -1,5 +1,6 @@
 import json
 import os 
+import random
 
 def gamemode_directory(gamemode): # Bestimmt passendes Verzeichnis mit Fragen anhand des gewählten Spielmodus
 
@@ -26,7 +27,7 @@ def gamemode_directory(gamemode): # Bestimmt passendes Verzeichnis mit Fragen an
     directory = os.path.join("/".join(mode_path))
     return directory
 
-
+# Es wird noch eine Funktion benötigt, die je nach Gamemode einen Fragenpool aus mehreren Verzeichnissen bildet
 
 def json_to_object(directory): # Funktion, um JSON-Dateien zu Quizfragen-Objekten zu konvertieren.
     questions = []
@@ -96,3 +97,7 @@ def json_to_object(directory): # Funktion, um JSON-Dateien zu Quizfragen-Objekte
                 print(f"Ein unerwarteter Fehler ist aufgetreten: {e}")
 
     return questions
+
+def shuffle_questionpool(questions): # Die Liste mit Fragen wird durchgemischt 
+    random.shuffle(questions)
+
