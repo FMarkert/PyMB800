@@ -1,6 +1,14 @@
 import json
 import os 
 import random
+import sys 
+
+act_path = os.path.dirname(os.path.abspath(__file__))
+class_path = os.path.join(act_path, '..', 'models')
+if class_path not in sys.path:
+    sys.path.append(class_path)
+
+import classes
 
 def gamemode_directory(gamemode): # Bestimmt passendes Verzeichnis mit Fragen anhand des gewählten Spielmodus
 
@@ -40,7 +48,7 @@ def json_to_object(directory): # Funktion, um JSON-Dateien zu Quizfragen-Objekte
 
                     # Überprüft den Fragetyp und erstellt das entsprechende Frageobjekt.
                     if data['type'] == 'drag_drop_order':
-                        question = Drag_Drop_Order(
+                        question = classes.Drag_Drop_Order(
                             id=data['id'],
                             question_text=data['question_text'],
                             src=data['src'],
@@ -51,7 +59,7 @@ def json_to_object(directory): # Funktion, um JSON-Dateien zu Quizfragen-Objekte
                             correct_answer=data['correct_answer']
                         )
                     elif data['type'] == 'drag_drop_pairs':
-                        question = Drag_Drop_Pairs(
+                        question = classes.Drag_Drop_Pairs(
                             id=data['id'],
                             question_text=data['question_text'],
                             src=data['src'],
@@ -61,7 +69,7 @@ def json_to_object(directory): # Funktion, um JSON-Dateien zu Quizfragen-Objekte
                             pairs=data['pairs']
                         )
                     elif data['type'] == 'dropdown':
-                        question = Dropdown(
+                        question = classes.Dropdown(
                             id=data['id'],
                             question_text=data['question_text'],
                             src=data['src'],
@@ -72,7 +80,7 @@ def json_to_object(directory): # Funktion, um JSON-Dateien zu Quizfragen-Objekte
                             correct_answer=data['correct_answer']
                         )
                     elif data['type'] == 'multiple_choice':
-                        question = Multiple_Choice(
+                        question = classes.Multiple_Choice(
                             id=data['id'],
                             question_text=data['question_text'],
                             src=data['src'],

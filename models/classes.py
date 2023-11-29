@@ -22,8 +22,8 @@ class Base_Question:
 
 
 class Drag_Drop_Order(Base_Question):
-    def __init__(self,items,correct_answer):
-        super().__init__()
+    def __init__(self,id,question_text,src,type,comment,casestudy,items,correct_answer):
+        super().__init__(id,question_text,src,type,comment,casestudy)
         self.items = items
         self.correct_answer = correct_answer
         print("Drag_Drop_Order Frage erstellet") #Test
@@ -34,8 +34,8 @@ class Drag_Drop_Order(Base_Question):
 
     
 class Drag_Drop_Pairs(Base_Question):
-    def __init__(self,pairs):
-        super().__init__()
+    def __init__(self,id,question_text,src,type,comment,casestudy,pairs):
+        super().__init__(id,question_text,src,type,comment,casestudy)
         self.pairs = pairs 
     def display_pairs(self):
         return self.pairs 
@@ -43,8 +43,8 @@ class Drag_Drop_Pairs(Base_Question):
         return user_answer == self.pairs
 
 class Dropdown(Base_Question):
-    def __init__(self,items,correct_answer):
-        super().__init__()
+    def __init__(self,id,question_text,src,type,comment,casestudy,items,correct_answer):
+        super().__init__(id,question_text,src,type,comment,casestudy)
         self.items = items 
         self.correct_answer = correct_answer
     def display_items(self):
@@ -57,8 +57,8 @@ class Dropdown(Base_Question):
 
 
 class Multiple_Choice(Base_Question):
-    def __init__(self,items,correct_answer):
-        super().__init__()
+    def __init__(self,id,question_text,src,type,comment,casestudy,items,correct_answer):
+        super().__init__(id,question_text,src,type,comment,casestudy)
         self.items = items 
         self.correct_answer = correct_answer
         print("MC Frage erstellt") #Test
