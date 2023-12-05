@@ -2,9 +2,12 @@
     "id": 30,
     "src":"l4d",
     "type": "multiple_choice",
-    "question_text": "You are implementing Dynamics 365 Business Central for a company. \nnThe company provides subscription services to their customers. \nThe subscription invoices are almost identical each month. \nThe company wants to set up recurring sales lines for subscription invoices. \nYou need to create systems for creating subscription invoices. \nSolution: Create a new recurring sales line code. \nThen, run the Create Recurring Invoices batch to create the invoice. \nDoes the solution meet the goal?",
-    "items": ["Yes","No"],
-    "correct_answer": ["No"],
+    "question_text": "You are implementing Dynamics 365 Business Central for a company. \nThe company provides subscription services to their customers. \nThe subscription invoices are almost identical each month. \nThe company wants to set up recurring sales lines for subscription invoices. \nYou need to create systems for creating subscription invoices. \nSolution: Create a new recurring sales line code. \nThen, run the Create Recurring Invoices batch to create the invoice. \nDoes the solution meet the goal?",
+    "items": {
+      "A":"Yes",
+      "B":"No"
+    },
+    "correct_answer": ["B"],
     "comment": "",
     "casestudy":"" 
   }

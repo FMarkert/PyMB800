@@ -26,10 +26,8 @@ def gamemode_directory(gamemode): # Bestimmt passendes Verzeichnis mit Fragen an
     else:
         print("Error: Mode not found")
         mode_directory = "Error"
-    
-# Bestimmt den Pfad zum Verzeichnis der Fragen:
 
-    act_path = os.path.dirname(os.path.abspath(__file__))
+    act_path = os.path.dirname(os.path.abspath(__file__)) # Bestimmt den Pfad zum Verzeichnis der Fragen:
     dict_path = os.path.dirname(act_path)
     mode_path = [dict_path,"data","questions"]+ mode_directory
     directory = os.path.join("/".join(mode_path))
@@ -109,3 +107,5 @@ def json_to_object(directory): # Funktion, um JSON-Dateien zu Quizfragen-Objekte
 def shuffle_questionpool(questions): # Die Liste mit Fragen wird durchgemischt 
     random.shuffle(questions)
 
+def collect_user_answers():
+    pass
