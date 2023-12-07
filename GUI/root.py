@@ -43,6 +43,10 @@ class QuizFrame(tk.Frame):
     def create_widgets(self):
         self.question_label = tk.Label(self, text="", font=("Roboto", 20))
         self.question_label.pack(pady=20)
+        self.back_button = tk.Button(self, text="Zurück", command=self.go_back)
+        self.back_button.pack(side=tk.LEFT, padx=10)
+        self.next_button = tk.Button(self, text="Weiter", command=self.go_next)
+        self.next_button.pack(side=tk.RIGHT, padx=10)
          
     def cancel_quiz(self):
         response = messagebox.askyesno("Quiz abbrechen", "Bro, bist du sicher, dass du das Quiz abbrechen möchtest?")
@@ -50,6 +54,13 @@ class QuizFrame(tk.Frame):
             self.pack_forget()  # Aktuellen Quiz-Frame ausblenden
             self.master.deiconify()  # Hauptfenster wieder anzeigen
 
+    def go_back(self):
+            self.current_question_index -= 2
+            self.load_question()
+
+    def go_next(self):
+        if self.current_question_index < len(self.questions):
+            self.load_question()
 
     def load_question(self):
         
@@ -98,9 +109,14 @@ class QuizFrame(tk.Frame):
 
             self.temp_user_answer.append(dropdown_var)
 
-    
+        back_button = tk.Button(self, text="Zurück", command=self.go_back)
+        back_button.place(relx=0.5, rely=1.0, x=-60, y=-10, anchor='s')
+
+        next_button = tk.Button(self, text="Weiter", command=self.go_next)
+        next_button.place(relx=0.5, rely=1.0, x=60, y=-10, anchor='s')
+
         self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
-        self.cancel_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
+        self.cancel_button.place(relx=0.9, rely=1.0, x=-30, y=-10, anchor='s')
 
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10, anchor='center')
@@ -131,8 +147,14 @@ class QuizFrame(tk.Frame):
 
                 self.temp_user_answer[key] = selected_value  # Füge das StringVar-Objekt zum Dictionary hinzu
 
+        back_button = tk.Button(self, text="Zurück", command=self.go_back)
+        back_button.place(relx=0.5, rely=1.0, x=-60, y=-10, anchor='s')
+
+        next_button = tk.Button(self, text="Weiter", command=self.go_next)
+        next_button.place(relx=0.5, rely=1.0, x=60, y=-10, anchor='s')
+
         self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
-        self.cancel_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
+        self.cancel_button.place(relx=0.9, rely=1.0, x=-30, y=-10, anchor='s')
         
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10)
@@ -155,8 +177,14 @@ class QuizFrame(tk.Frame):
                 cb = tk.Checkbutton(self, text=f"{option_key}: {option_text}", command=lambda key=option_key: toggle_option(key), font=('Roboto', 20))
                 cb.pack(anchor='center')
 
+        back_button = tk.Button(self, text="Zurück", command=self.go_back)
+        back_button.place(relx=0.5, rely=1.0, x=-60, y=-10, anchor='s')
+
+        next_button = tk.Button(self, text="Weiter", command=self.go_next)
+        next_button.place(relx=0.5, rely=1.0, x=60, y=-10, anchor='s')
+
         self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
-        self.cancel_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
+        self.cancel_button.place(relx=0.9, rely=1.0, x=-30, y=-10, anchor='s')
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10)
 
@@ -181,8 +209,14 @@ class QuizFrame(tk.Frame):
 
             self.temp_user_answer.append(selected_value)
 
+        back_button = tk.Button(self, text="Zurück", command=self.go_back)
+        back_button.place(relx=0.5, rely=1.0, x=-60, y=-10, anchor='s')
+
+        next_button = tk.Button(self, text="Weiter", command=self.go_next)
+        next_button.place(relx=0.5, rely=1.0, x=60, y=-10, anchor='s')
+
         self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
-        self.cancel_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
+        self.cancel_button.place(relx=0.9, rely=1.0, x=-30, y=-10, anchor='s')
 
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10)
