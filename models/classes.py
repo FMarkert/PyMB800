@@ -36,21 +36,12 @@ class Drag_Drop_Pairs(Base_Question):
     def __init__(self,id,question_text,src,type,comment,casestudy,pairs):
         super().__init__(id,question_text,src,type,comment,casestudy)
         self.pairs = pairs 
-<<<<<<< HEAD
-=======
-        self.correct_answer = self.generate_correct_answers()
-        print(f"Drag_Drop_Pairs Frage erstellet.Antworten = {self.correct_answer}") #Test
->>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
     def display_pairs(self):
         return self.pairs 
     def generate_correct_answers(self):  # Erzeuge eine Liste mit den korrekten Antworten basierend auf den Paaren
         return [self.pairs]
     def check_answer(self, user_answer):
-<<<<<<< HEAD
         return user_answer == self.pairs
-=======
-        return user_answer == self.correct_answer
->>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
 class Dropdown(Base_Question):
     def __init__(self,id,question_text,src,type,comment,casestudy,items,correct_answer):
