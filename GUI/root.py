@@ -11,7 +11,11 @@ if class_path not in sys.path:
     sys.path.append(class_path)
 
 import functions
+<<<<<<< HEAD
 import classes
+=======
+import classes 
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
 
 def main():
@@ -19,9 +23,15 @@ def main():
     root.title("PyMB800")
     root.geometry("1000x1000")
 
+<<<<<<< HEAD
     logo = tk.Label(root, text="PyMB800", font=("Roboto",45,'bold','italic'), bg='blue',fg="orange")
     logo.pack(pady=25)
     button1 =  tk.Button(root, text="START DEMO", font=("Roboto",45,'bold','italic'), bg="blue",fg="orange", command=lambda: start_demo(root))
+=======
+    logo = tk.Label(root, text="PyMB800", font=("Roboto",45,'bold','italic'), bg='orange',fg="blue")
+    logo.pack(pady=25)
+    button1 =  tk.Button(root, text="START DEMO", font=("Roboto",45,'bold','italic'), bg='orange',fg="blue", command=lambda: start_demo(root))
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
     button1.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
     root.mainloop()
@@ -33,15 +43,24 @@ class QuizFrame(tk.Frame):
         self.questions = questions # Speichert die Liste der Fragenobjekte
         self.current_question_index = 0 # Startet mit der ersten Frage
         self.user_answers = {} # Dictnionary zum Speichern von Nutzerantworten 
+<<<<<<< HEAD
         self.user_score = {} # Dictionary zum Punktestand des Nutzers 
         self.temp_user_answer = None # Temporärer Speicher für die aktuelle Benutzerantwort
         self.create_widgets() # Erstellt die Widgets im Frame
         self.mc_vars = {}
+=======
+        self.temp_user_answer = None # Temporärer Speicher für die aktuelle Benutzerantwort
+        self.create_widgets() # Erstellt die Widgets im Frame
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
     def create_widgets(self):
         self.question_label = tk.Label(self, text="", font=("Roboto", 20))
         self.question_label.pack(pady=20)
+<<<<<<< HEAD
         
+=======
+        # Hier können weitere Widgets wie Buttons oder Eingabefelder hinzugefügt werden
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
     def load_question(self):
         
@@ -67,8 +86,14 @@ class QuizFrame(tk.Frame):
 
 
     def create_ddo_widget(self, question):
+<<<<<<< HEAD
         self.temp_user_answer = []  # Liste zum Speichern der ausgewählten Indizes
         self.dropdown_vars = []  # Liste zum Speichern der StringVar-Objekte
+=======
+
+        self.temp_user_answer = []  # Initialisiere temp_user_answer für DDO-Fragen als Liste
+        self.entry_widgets = []  # Liste zum Speichern der Entry-Widgets
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
         for widget in self.winfo_children():
             if widget != self.question_label:
@@ -78,6 +103,7 @@ class QuizFrame(tk.Frame):
             frame = tk.Frame(self)
             frame.pack(pady=5, anchor='center')
 
+<<<<<<< HEAD
             dropdown_var = tk.StringVar(frame)
             self.dropdown_vars.append(dropdown_var)
         
@@ -90,10 +116,23 @@ class QuizFrame(tk.Frame):
 
             self.temp_user_answer.append(dropdown_var)
 
+=======
+            entry = tk.Entry(frame, width=2)
+            entry.pack(side=tk.LEFT)
+            self.entry_widgets.append(entry)  # Füge das Entry-Widget zur Liste hinzu
+
+            label = tk.Label(frame, text=item, font=('Roboto', 20))
+            label.pack(side=tk.LEFT)
+
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10, anchor='center')
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
     def create_ddp_widget(self, question):
         self.temp_user_answer = {}  # Initialisiere temp_user_answer für DDP-Fragen als Dictionary
 
@@ -130,6 +169,7 @@ class QuizFrame(tk.Frame):
         for widget in self.winfo_children():
             if widget != self.question_label:
                 widget.destroy()
+<<<<<<< HEAD
         
         def toggle_option(key):
             self.mc_vars[key] = not self.mc_vars.get(key, False)   # Kehrt den Wert um, wenn die Checkbox angeklickt wird
@@ -139,6 +179,14 @@ class QuizFrame(tk.Frame):
                 self.mc_vars[option_key] = False
                 cb = tk.Checkbutton(self, text=f"{option_key}: {option_text}", command=lambda key=option_key: toggle_option(key), font=('Roboto', 20))
                 cb.pack(anchor='center')
+=======
+
+        for option_key, option_text in question.items.items():
+            var = tk.BooleanVar(value=False)
+            self.mc_vars[option_key] = var
+            rb = tk.Radiobutton(self, text=f"{option_key}: {option_text}", variable=var, value=option_key, font=('Roboto', 20))
+            rb.pack(anchor='center')
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10)
@@ -149,8 +197,12 @@ class QuizFrame(tk.Frame):
             if widget != self.question_label:
                 widget.destroy()
 
+<<<<<<< HEAD
         self.temp_user_answer = []  # Initialisiere temp_user_answer für Dropdown-Fragen als Dictionary
 
+=======
+        self.temp_user_answer = {}  # Initialisiere temp_user_answer für Dropdown-Fragen als Dictionary
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
         for item in question.items:
             frame = tk.Frame(self)
@@ -163,13 +215,19 @@ class QuizFrame(tk.Frame):
             dropdown = tk.OptionMenu(frame, selected_value, *item['options'])
             dropdown.pack(side=tk.LEFT)
 
+<<<<<<< HEAD
             self.temp_user_answer.append(selected_value)
+=======
+            # Speichere die StringVar für jede Dropdown-Option
+            self.temp_user_answer[item['text']] = selected_value
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10)
 
     def collect_user_answer(self, question):
         if isinstance(question, classes.Drag_Drop_Order):
+<<<<<<< HEAD
             user_answer = []
             for dropdown_var in self.dropdown_vars:
                 try:
@@ -201,12 +259,24 @@ class QuizFrame(tk.Frame):
             user_answer = [var.get() for var in self.temp_user_answer]
             print(f"Dropdown User Answer:{user_answer}")
             self.check_answers(question, user_answer)
+=======
+            self.user_answers[question.id] = [entry.get() for entry in self.entry_widgets]
+        elif isinstance(question, classes.Multiple_Choice):
+            selected_options = [key for key, var in self.mc_vars.items() if var.get() == key]
+            self.user_answers[question.id] = selected_options
+        elif isinstance(question, classes.Drag_Drop_Pairs):
+            pairs_answers = {key: var.get() for key, var in self.temp_user_answer.items()}
+            self.user_answers[question.id] = pairs_answers
+        elif isinstance(question, classes.Dropdown):
+            self.user_answers[question.id] = {key: var.get() for key, var in self.temp_user_answer.items()}
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
         print(self.user_answers)
 
     def submit_and_load_next(self, question): # Funktion für das Laden der nächsten Frage
         self.collect_user_answer(question)
         self.load_question()
             
+<<<<<<< HEAD
     def check_answers(self,question,user_answer): # Logik zum Überprüfen der Antwort
         answer_to_check = question.check_answer(user_answer)
         self.user_score[question.id] = answer_to_check 
@@ -252,6 +322,17 @@ class QuizEndFrame(tk.Frame):
     def back_to_main(self):
         self.destroy()  # Aktuellen Frame schließen
         self.root.deiconify()  # Hauptfenster wieder anzeigen
+=======
+
+    def handle_quiz_end(self):
+        # Logik, was passiert, wenn das Quiz endet (z.B. Ergebnisse anzeigen)
+        pass
+    
+    def check_answer(self, question):
+        # Logik zum bestätigen der Antwort
+        pass
+
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
 
 def start_demo(root):
     gamemode = "l4d_1-40"
@@ -260,10 +341,19 @@ def start_demo(root):
 
     if not questions: #Überprüft ob Fragen geladen wurden
         print ('Keine Fragen geladen') 
+<<<<<<< HEAD
+=======
+
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
     quiz_frame = QuizFrame(root, questions)
     quiz_frame.pack(fill='both', expand=True)
 
     quiz_frame.load_question()
 
 if __name__ == "__main__":
+<<<<<<< HEAD
     main()
+=======
+    main()
+    
+>>>>>>> 9a0dc3f67e8ecbbe85beca73145c97d4836362ce
