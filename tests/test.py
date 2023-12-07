@@ -1,13 +1,11 @@
-x= {
-        "Customer Posting Group": "Specific posting group", 
-        "VAT Product Poting Group": "Tax posting groups", 
-        "VAT Business Posting Group": "Tax posting groups", 
-        "Inventory Posting Group": "Specific posting group", 
-        "Gen. Product Posting Group": "General posting group", 
-        "Vendor Posting Group": "Specific posting group", 
-        "Gen. Business Posting Group": "General posting group" 
-    } 
+from fpdf import FPDF 
 
-y= {'Customer Posting Group': 'Specific posting group', 'VAT Product Poting Group': 'Tax posting groups', 'VAT Business Posting Group': 'Tax posting groups', 'Inventory Posting Group': 'Specific posting group', 'Gen. Product Posting Group': 'General posting group', 'Vendor Posting Group': 'Specific posting group', 'Gen. Business Posting Group': 'General posting group'}
 
-print(x==y)
+# PDF-Objekt erstellen
+pdf = FPDF()
+pdf.add_page()
+pdf.set_font("Arial", size=12)
+pdf.cell(200, 10, txt="Willkommen zu Python PDF Erstellung!", ln=True, align='C')
+
+# PDF speichern
+pdf.output("example.pdf")
