@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 import sys
 import os
 
@@ -35,13 +36,20 @@ class QuizFrame(tk.Frame):
         self.user_answers = {} # Dictnionary zum Speichern von Nutzerantworten 
         self.user_score = {} # Dictionary zum Punktestand des Nutzers 
         self.temp_user_answer = None # Temporärer Speicher für die aktuelle Benutzerantwort
-        self.create_widgets() # Erstellt die Widgets im Frame
         self.mc_vars = {}
+        self.cancel_button = None # Abbruch-Button initialisieren
+        self.create_widgets() # Erstellt die Widgets im Frame
 
     def create_widgets(self):
         self.question_label = tk.Label(self, text="", font=("Roboto", 20))
         self.question_label.pack(pady=20)
-        
+         
+    def cancel_quiz(self):
+        response = messagebox.askyesno("Quiz abbrechen", "Bro, bist du sicher, dass du das Quiz abbrechen möchtest?")
+        if response:
+            self.pack_forget()  # Aktuellen Quiz-Frame ausblenden
+            self.master.deiconify()  # Hauptfenster wieder anzeigen
+
 
     def load_question(self):
         
@@ -90,6 +98,10 @@ class QuizFrame(tk.Frame):
 
             self.temp_user_answer.append(dropdown_var)
 
+    
+        self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
+        self.cancel_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
+
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10, anchor='center')
 
@@ -100,7 +112,7 @@ class QuizFrame(tk.Frame):
         all_options = set()  # Ein Set, um Duplikate zu vermeiden
         for value in question.pairs.values():
             all_options.add(value)
-        all_options = list(all_options)  # Konvertiere das Set zurück in eine Liste
+        all_options = list(all_options) # Konvertiere das Set zurück in eine Liste
 
         for widget in self.winfo_children():
                 if widget != self.question_label:
@@ -119,6 +131,9 @@ class QuizFrame(tk.Frame):
 
                 self.temp_user_answer[key] = selected_value  # Füge das StringVar-Objekt zum Dictionary hinzu
 
+        self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
+        self.cancel_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
+        
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10)
 
@@ -140,9 +155,10 @@ class QuizFrame(tk.Frame):
                 cb = tk.Checkbutton(self, text=f"{option_key}: {option_text}", command=lambda key=option_key: toggle_option(key), font=('Roboto', 20))
                 cb.pack(anchor='center')
 
+        self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
+        self.cancel_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10)
-
 
     def create_dd_widget(self, question):
         for widget in self.winfo_children():
@@ -165,8 +181,12 @@ class QuizFrame(tk.Frame):
 
             self.temp_user_answer.append(selected_value)
 
+        self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
+        self.cancel_button.place(relx=1.0, rely=1.0, anchor='se', x=-10, y=-10)
+
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
         submit_button.pack(pady=10)
+
 
     def collect_user_answer(self, question):
         if isinstance(question, classes.Drag_Drop_Order):
