@@ -9,14 +9,18 @@ import classes
 def main():
     root = tk.Tk()
     root.title("PyMB800")
-    root.geometry("1000x1000")
 
-    logo = tk.Label(root, text="PyMB800", font=("Roboto",45,'bold','italic'), bg='blue',fg="orange")
+   
+    root.attributes('-fullscreen', True) # Aktivieren des Vollbildmodus
+
+    logo = tk.Label(root, text="PyMB800", font=("Roboto", 45, 'bold', 'italic'), bg='blue', fg="orange")
     logo.pack(pady=25)
-    button1 =  tk.Button(root, text="START DEMO", font=("Roboto",45,'bold','italic'), bg="blue",fg="orange", command=lambda: start_demo(root))
+    button1 = tk.Button(root, text="START DEMO", font=("Roboto", 45, 'bold', 'italic'), bg="blue", fg="orange", command=lambda: start_demo(root))
     button1.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
 
     root.mainloop()
+
+
 
 
 class QuizFrame(tk.Frame):
@@ -308,6 +312,8 @@ def start_demo(root):
     quiz_frame.pack(fill='both', expand=True)
 
     quiz_frame.load_question()
+
+
 
 if __name__ == "__main__":
     main()
