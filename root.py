@@ -81,28 +81,19 @@ class QuizFrame(tk.Frame):
 
 
     def create_ddo_widget(self, question):
-        self.temp_user_answer = []  # Liste zum Speichern der ausgewählten Indizes
-        self.dropdown_vars = []  # Liste zum Speichern der StringVar-Objekte
+        self.temp_user_answer = []  # Liste zum Speichern der Labels
 
         for widget in self.winfo_children():
             if widget != self.question_label:
                 widget.destroy()
 
         for item in question.items:
-            frame = tk.Frame(self)
-            frame.pack(pady=5, anchor='center')
-
-            dropdown_var = tk.StringVar(frame)
-            self.dropdown_vars.append(dropdown_var)
-        
-            options = list(range(1, len(question.items) + 1)) # Erstellen der Dropdown-Menüoptionen (1 bis Anzahl der Antworten)
-            dropdown = tk.OptionMenu(frame, dropdown_var, *options)
-            dropdown.pack(side=tk.LEFT)
-
-            label = tk.Label(frame, text=item, font=('Roboto', 20)) # Erstellen eines Labels neben dem Dropdown-Menü für die Antwortmöglichkeit
-            label.pack(side=tk.LEFT)
-
-            self.temp_user_answer.append(dropdown_var)
+            label = tk.Label(self, text=item, font=('Roboto', 20), bg='lightgrey')
+            label.pack(pady=5, anchor='center')
+            label.bind('<ButtonPress-1>', self.drag_init)
+            label.bind('<B1-Motion>', self.drag_widget)
+            label.bind('<ButtonRelease-1>', self.finalize_dragging)
+            self.temp_user_answer.append(label)
 
         back_button = tk.Button(self, text="Zurück", command=self.go_back)
         back_button.place(relx=0.5, rely=1.0, x=-60, y=-10, anchor='s')
@@ -217,20 +208,10 @@ class QuizFrame(tk.Frame):
         submit_button.pack(pady=10)
 
 
-    def collect_user_answer(self, question):
+    def collect_user_answer(self, question, user_answers=None):
         if isinstance(question, classes.Drag_Drop_Order):
-            user_answer = []
-            for dropdown_var in self.dropdown_vars:
-                try:
-                    idx = int(dropdown_var.get()) - 1
-                    if 0 <= idx < len(question.items):
-                        user_answer.append(question.items[idx])
-                    else:
-                        user_answer.append("Ungültiger Index")
-                except ValueError:
-                    user_answer.append("Keine gültige Zahl")
-            self.user_answers[question.id] = user_answer
-            self.check_answers(question, user_answer)
+            self.user_answers[question.id] = user_answers
+            self.check_answers(question, user_answers)
         elif isinstance(question, classes.Multiple_Choice):
             print(f"Das ist self.mc.vars: {self.mc_vars}")
             selected_options = [key for key, value in self.mc_vars.items() if value == True] # Packt vom Anwender gewählte Optionen in eine Liste
@@ -252,15 +233,32 @@ class QuizFrame(tk.Frame):
             self.check_answers(question, user_answer)
         print(self.user_answers)
 
-    def submit_and_load_next(self, question): # Funktion für das Laden der nächsten Frage
-        self.collect_user_answer(question)
+    def submit_and_load_next(self, question):
+        if isinstance(question, classes.Drag_Drop_Order):
+            sorted_labels = sorted(self.temp_user_answer, key=lambda label: label.winfo_y())
+            user_answers_in_order = [label.cget("text") for label in sorted_labels]
+            self.collect_user_answer(question, user_answers_in_order)
+        else:
+            self.collect_user_answer(question)
         self.load_question()
-            
+
+
     def check_answers(self,question,user_answer): # Logik zum Überprüfen der Antwort
         answer_to_check = question.check_answer(user_answer)
         self.user_score[question.id] = answer_to_check 
         print(f"answer_to_check lautet {answer_to_check} und self.user_score lautet {self.user_score}")  
 
+    def drag_widget(self, event):
+        if (label := self.dragged_label):
+            new_y = event.y + label.winfo_y()
+            center_x = (self.winfo_width() - label.winfo_width()) // 2
+            label.place(x=center_x, y=new_y)
+
+    def drag_init(self, event):
+        self.dragged_label = event.widget
+        event.widget.lift()
+    def finalize_dragging(self, event):
+        self.dragged_label = None
    
     def handle_quiz_end(self): # Logik, was passiert, wenn das Quiz endet (z.B. Ergebnisse anzeigen, danach zum Hauptmenü)     
         total_questions = len(self.questions)
