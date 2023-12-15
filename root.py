@@ -10,13 +10,25 @@ def main():
     root = tk.Tk()
     root.title("PyMB800")
 
-   
+    # Konfigurieren der Spalten und Zeilen für eine gleichmäßige Verteilung
+    root.columnconfigure(0, weight=1)
+    root.columnconfigure(1, weight=1)
+    root.columnconfigure(2, weight=1)
+    root.rowconfigure(0, weight=1)
+    root.rowconfigure(1, weight=1)
+    root.rowconfigure(2, weight=1)
+    root.rowconfigure(3, weight=1)
+    root.rowconfigure(4, weight=1)
+
     root.attributes('-fullscreen', True) # Aktivieren des Vollbildmodus
 
+    # Logo
     logo = tk.Label(root, text="PyMB800", font=("Roboto", 45, 'bold', 'italic'), bg='blue', fg="orange")
-    logo.pack(pady=25)
+    logo.grid(row=0, column=1, sticky='n', pady=25)
+
+    # Button
     button1 = tk.Button(root, text="START DEMO", font=("Roboto", 45, 'bold', 'italic'), bg="blue", fg="orange", command=lambda: start_demo(root))
-    button1.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+    button1.grid(row=2, column=1, sticky='n')
 
     root.mainloop()
 
@@ -32,21 +44,24 @@ class QuizFrame(tk.Frame):
         self.user_score = {} # Dictionary zum Punktestand des Nutzers 
         self.temp_user_answer = None # Temporärer Speicher für die aktuelle Benutzerantwort
         self.mc_vars = {}
-        self.cancel_button = None # Abbruch-Button initialisieren
+        self.question_label = tk.Label(self, text="", font=("Roboto", 20))
+        self.back_button = tk.Button(self, text="Zurück", command=self.go_back)
+        self.next_button = tk.Button(self, text="Weiter", command=self.go_next)
+        self.question_label = tk.Label(self, text="", font=("Roboto", 20))
         self.create_widgets() # Erstellt die Widgets im Frame
 
     def create_widgets(self):
-        self.question_label = tk.Label(self, text="", font=("Roboto", 20))
-        self.question_label.pack(pady=20)
-        self.back_button = tk.Button(self, text="Zurück", command=self.go_back)
-        self.back_button.pack(side=tk.LEFT, padx=10)
-        self.next_button = tk.Button(self, text="Weiter", command=self.go_next)
-        self.next_button.pack(side=tk.RIGHT, padx=10)
+        self.question_label.grid(row=0, column=0, columnspan=2, sticky="ew", pady=20)
+        self.back_button.grid(row=1, column=0, sticky="w", padx=10)
+        self.next_button.grid(row=1, column=1, sticky="e", padx=10)
+
+
+        
          
     def cancel_quiz(self):
         response = messagebox.askyesno("Quiz abbrechen", "Bro, bist du sicher, dass du das Quiz abbrechen möchtest?")
         if response:
-            self.pack_forget()  # Aktuellen Quiz-Frame ausblenden
+            self.grid_forget()  # Aktuellen Quiz-Frame ausblenden
             self.master.deiconify()  # Hauptfenster wieder anzeigen
 
     def go_back(self):
@@ -81,31 +96,32 @@ class QuizFrame(tk.Frame):
 
 
     def create_ddo_widget(self, question):
-        self.temp_user_answer = []  # Liste zum Speichern der Labels
+        self.canvas = tk.Canvas(self, bg='lightgrey')
+        self.canvas.grid(row=0, column=0, sticky='nsew', padx=10, pady=10)
 
-        for widget in self.winfo_children():
-            if widget != self.question_label:
-                widget.destroy()
+        self.temp_user_answer = []
+        for index, item in enumerate(question.items):
+            label = tk.Label(self.canvas, text=item, font=('Roboto', 20), bg='lightgrey')
+            label_id = self.canvas.create_window(10, 30 + index * 30, window=label, anchor='nw')
+            self.temp_user_answer.append((label, label_id))
 
-        for item in question.items:
-            label = tk.Label(self, text=item, font=('Roboto', 20), bg='lightgrey')
-            label.pack(pady=5, anchor='center')
-            label.bind('<ButtonPress-1>', self.drag_init)
-            label.bind('<B1-Motion>', self.drag_widget)
-            label.bind('<ButtonRelease-1>', self.finalize_dragging)
-            self.temp_user_answer.append(label)
+        # Konfigurieren der Zeilen und Spalten für die Buttons
+        self.columnconfigure(0, weight=1)
+        self.rowconfigure([1, 2, 3], weight=1)
 
+        # Hinzufügen der Buttons mit grid
         back_button = tk.Button(self, text="Zurück", command=self.go_back)
-        back_button.place(relx=0.5, rely=1.0, x=-60, y=-10, anchor='s')
+        back_button.grid(row=1, column=0, sticky='ew', padx=10, pady=10)
 
         next_button = tk.Button(self, text="Weiter", command=self.go_next)
-        next_button.place(relx=0.5, rely=1.0, x=60, y=-10, anchor='s')
+        next_button.grid(row=2, column=0, sticky='ew', padx=10, pady=10)
 
         self.cancel_button = tk.Button(self, text="Quiz abbrechen", command=self.cancel_quiz)
-        self.cancel_button.place(relx=0.9, rely=1.0, x=-30, y=-10, anchor='s')
+        self.cancel_button.grid(row=3, column=0, sticky='e', padx=10, pady=10)
 
         submit_button = tk.Button(self, text="Antwort bestätigen", command=lambda: self.submit_and_load_next(question))
-        submit_button.pack(pady=10, anchor='center')
+        submit_button.grid(row=4, column=0, sticky='ew', padx=10, pady=10)
+
 
 
     def create_ddp_widget(self, question):
@@ -248,17 +264,21 @@ class QuizFrame(tk.Frame):
         self.user_score[question.id] = answer_to_check 
         print(f"answer_to_check lautet {answer_to_check} und self.user_score lautet {self.user_score}")  
 
-    def drag_widget(self, event):
-        if (label := self.dragged_label):
-            new_y = event.y + label.winfo_y()
-            center_x = (self.winfo_width() - label.winfo_width()) // 2
-            label.place(x=center_x, y=new_y)
-
     def drag_init(self, event):
-        self.dragged_label = event.widget
-        event.widget.lift()
+        widget = event.widget
+        self.dragged_label = None
+        for label, label_id in self.temp_user_answer:
+            if widget == label:
+                self.dragged_label = label_id
+                break
+
+    def drag_widget(self, event):
+        if self.dragged_label:
+            self.canvas.coords(self.dragged_label, event.x, event.y)
+
     def finalize_dragging(self, event):
         self.dragged_label = None
+
    
     def handle_quiz_end(self): # Logik, was passiert, wenn das Quiz endet (z.B. Ergebnisse anzeigen, danach zum Hauptmenü)     
         total_questions = len(self.questions)
@@ -272,29 +292,31 @@ class QuizFrame(tk.Frame):
 class QuizEndFrame(tk.Frame):
     def __init__(self, parent, main_frame, root, stats):
         super().__init__(parent)
-        self.main_frame = main_frame  # Referenz zum Haupt-Frame
-        self.root = root  # Referenz zum Hauptfenster (root)
+        self.main_frame = main_frame
+        self.root = root
         self.stats = stats
 
-        label = tk.Label(self, text="Quiz beendet", font=("Roboto", 20)) # Label für "Quiz beendet"
-        label.pack(pady=20)
+        # Konfigurieren der Zeilen und Spalten
+        self.columnconfigure(0, weight=1)
+        for i in range(4):  # Angenommen, Sie haben 4 Zeilen
+            self.rowconfigure(i, weight=1)
+
+        # Hinzufügen der Widgets
+        label = tk.Label(self, text="Quiz beendet", font=("Roboto", 20))
+        label.grid(row=0, column=0, sticky="ew", pady=20)
 
         stats_label = tk.Label(self, text=f"Richtig beantwortete Fragen: {self.stats['correct']}/{self.stats['total']}", font=("Roboto", 20))
-        stats_label.pack(pady=20)
+        stats_label.grid(row=1, column=0, sticky="ew", pady=20)
 
-        if self.stats['correct'] / self.stats['total'] >= 0.9:
-            pass_label = tk.Label(self, text="Glückwunsch!!!", font=("Roboto", 20))
-            pass_label.pack(pady=20)
-        else:
-            pass_label = tk.Label(self, text="Schade!!!", font=("Roboto", 20))
-            pass_label.pack(pady=20)
+        # Bedingtes Label
+        pass_label_text = "Glückwunsch!!!" if self.stats['correct'] / self.stats['total'] >= 0.9 else "Schade!!!"
+        pass_label = tk.Label(self, text=pass_label_text, font=("Roboto", 20))
+        pass_label.grid(row=2, column=0, sticky="ew", pady=20)
 
-        self.pack_propagate(0)  # Verhindert, dass sich der Frame an den Inhalt anpasst
-        spacer = tk.Frame(self, height=300)  # Ändern Sie die Höhe nach Bedarf
-        spacer.pack(fill='both', expand=True)
+        # Zurück-Button
+        back_button = tk.Button(self, text="Zurück zur Hauptseite", command=self.back_to_main)
+        back_button.grid(row=3, column=0, sticky="e", padx=10, pady=10)
 
-        back_button = tk.Button(self, text="Zurück zur Hauptseite", command=self.back_to_main) # Button, um zum Haupt-Frame zurückzukehren
-        back_button.pack(anchor='se', padx=10, pady=10)
 
     def back_to_main(self):
         self.destroy()  # Aktuellen Frame schließen
