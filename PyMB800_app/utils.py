@@ -39,6 +39,7 @@ def gamemode_directory(gamemode):
 
 def json_to_object(directory):
     questions = []
+    errors = []
     for filename in os.listdir(directory):
         if filename.endswith(".json"):
             filepath = os.path.join(directory, filename)
@@ -66,7 +67,7 @@ def json_to_object(directory):
                             pairs=data['pairs']
                         )
                     elif data['type'] == 'dropdown':
-                        question = Dropdown(
+                        question = DropDown(
                             id=data['id'],
                             question_text=data['question_text'],
                             src=data['src'],
@@ -91,8 +92,9 @@ def json_to_object(directory):
 
                     questions.append(question)
             except Exception as e:
-                print(f"Fehler beim Laden der Frage aus {filename}: {e}")
-    return questions
+                errors.append(f"Fehler beim Laden der Frage aus {filename}: {e}")
+    return questions, errors
+
 
 def shuffle_questionpool(questions): # Die Liste mit Fragen wird durchgemischt 
     random.shuffle(questions)
