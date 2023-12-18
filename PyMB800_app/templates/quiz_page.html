@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Seite</title>
+    <!-- CSS und JavaScript-Dateien hier einbinden -->
+</head>
+<body>
+    <div id="quiz-container">
+        <!-- Frage-Container -->
+    </div>
+
+    <!-- Verstecktes Element zum Speichern der Fragen -->
+    <div id="questions-data" style="display: none;">{{ questions_json|safe }}</div>
+
+    <!-- Navigationsbuttons -->
+    <button onclick="navigateQuestion(-1)">Vorherige Frage</button>
+    <button onclick="navigateQuestion(1)">Nächste Frage</button>
+    <button onclick="window.location.href='{% url 'index' %}'" >Quiz Abbrechen</button>
+
+    <!-- JavaScript-Logik -->
+    <script>
+        var questions = JSON.parse(document.getElementById('questions-data').innerText);
+        var currentQuestionIndex = 0;
+
+        function displayQuestion(index) {
+            // Logik zum Anzeigen der Frage basierend auf dem Index
+            var question = questions[index];
+            var container = document.getElementById('quiz-container');
+            container.innerHTML = '<h2>' + question.question_text + '</h2>';
+            // Fügen Sie hier Code hinzu, um Fragetyp-spezifische Elemente zu rendern
+        }
+
+        function navigateQuestion(step) {
+            currentQuestionIndex += step;
+            if (currentQuestionIndex >= 0 && currentQuestionIndex < questions.length) {
+                displayQuestion(currentQuestionIndex);
+            }
+        }
+
+        // Zeigen Sie beim Laden der Seite die erste Frage an
+        displayQuestion(currentQuestionIndex);
+    </script>
+</body>
+</html>

@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Quiz Check Page</title>
+    <script>
+        // Funktion zur Weiterleitung nach 2 Sekunden (3000 Millisekunden)
+        function redirectToQuiz() {
+            setTimeout(function() {
+                window.location.href = '{% url "quiz_page" %}';
+            }, 2000);
+        }
+    </script>
 </head>
-<body>
+<body onload="redirectToQuiz()">
     <h1>Quiz Check Page</h1>
     {% if questions %}
         <p>{{ questions|length }} Fragen wurden erfolgreich geladen.</p>
