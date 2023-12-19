@@ -20,7 +20,7 @@ from PyMB800_app import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('index/', views.index, name='index'),
+    path('', views.index, name='index'),
     path('start/', views.start_quiz, name='start_quiz'),
     path('loadcheck/', views.check_page, name='check_page'),
     path('quizpage/', views.quiz_page, name='quiz_page')

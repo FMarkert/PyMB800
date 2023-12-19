@@ -11,7 +11,7 @@ def start_quiz(request):
     gamemode = "l4d_1-40"
     directory = gamemode_directory(gamemode)
     questions, errors = json_to_object(directory)
-    shuffle_questionpool(questions)
+    #shuffle_questionpool(questions)
     # Daten an das Template übergeben
     return render(request, 'check_page.html', {
         'questions': questions,

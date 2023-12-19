@@ -3,19 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>Quiz Check Page</title>
-    <script>
-        // Funktion zur Weiterleitung nach 2 Sekunden (3000 Millisekunden)
-        function redirectToQuiz() {
-            setTimeout(function() {
-                window.location.href = '{% url "quiz_page" %}';
-            }, 2000);
-        }
-    </script>
 </head>
-<body onload="redirectToQuiz()">
+<body>
     <h1>Quiz Check Page</h1>
     {% if questions %}
         <p>{{ questions|length }} Fragen wurden erfolgreich geladen.</p>
+        <h2>Geladene Fragen:</h2>
+        <ol>
+            {% for question in questions %}
+                <li>ID: {{ question.id }}, Frage: {{ question.question_text }}</li>
+            {% endfor %}
+        </ol>
+        
+        <ol>
+            {% for question in questions %}
+                <li>{{ question }}</li>
+            {% endfor %}
+        </ol>
     {% endif %}
 
     {% if errors %}
@@ -28,5 +32,15 @@
     {% else %}
         <p>Alle Fragen wurden erfolgreich geladen.</p>
     {% endif %}
+
+    <!-- Button zur Weiterleitung -->
+    <button onclick="redirectToQuiz()">Quiz Starten</button>
+
+    <!-- JavaScript für die Weiterleitung -->
+    <script>
+        function redirectToQuiz() {
+            window.location.href = '{% url "quiz_page" %}';
+        }
+    </script>
 </body>
 </html>
