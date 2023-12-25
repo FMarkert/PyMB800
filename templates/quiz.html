@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+        }
+        .question {
+            margin: 20px;
+        }
+        .buttons {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="question">
+        <h2>Frage {{ question_index + 1 }} von {{ total_questions }}</h2>
+        <p>{{ question.question_text }}</p>
+    </div>
+    
+    <div class="buttons">
+        <!-- Navigation zwischen den Fragen -->
+        <button onclick="location.href='/change_question?direction=prev'">Vorherige Frage</button>
+        <button onclick="location.href='/change_question?direction=next'">Nächste Frage</button>
+
+        <!-- Button zum Beenden des Quiz -->
+        <button onclick="confirmExit()">Quiz Beenden</button>
+    </div>
+
+    <script>
+        function confirmExit() {
+            if (confirm("Bist du sicher, dass du das Quiz beenden möchtest?")) {
+                location.href = '/end_quiz';  // Leite zur End-Quiz Route um
+            }
+        }
+    </script>
+</body>
+</html>
