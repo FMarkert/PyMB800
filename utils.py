@@ -55,7 +55,6 @@ def json_to_object(directory):
                             comment=data.get('comment', ''),
                             casestudy=data.get('casestudy', ''),
                             items=data['items'],
-                            correct_answer=data['correct_answer']
                         )
                     elif data['type'] == 'drag_drop_pairs':
                         question = models.Drag_Drop_Pairs(
@@ -65,7 +64,7 @@ def json_to_object(directory):
                             type=data['type'],  # Hinzufügen des fehlenden Parameters
                             comment=data.get('comment', ''),
                             casestudy=data.get('casestudy', ''),
-                            pairs=data['pairs']
+                            items=data['items']
                         )
                     elif data['type'] == 'dropdown':
                         question = models.Dropdown(
@@ -112,7 +111,7 @@ def start_demo():
     return questions, errors
 
 def object_to_dict(obj):
-    if obj.type == 'drag_drop_pairs':
+    if obj.type == 'drag_drop_pairs' or obj.type == 'drag_drop_order':
         return {
             'id': obj.id,
             'question_text': obj.question_text,
@@ -120,7 +119,7 @@ def object_to_dict(obj):
             'type': obj.type,
             'comment': obj.comment,
             'casestudy': obj.casestudy,
-            'pairs':obj.pairs
+            'items': obj.items
         }
     else:
         return {
@@ -131,5 +130,6 @@ def object_to_dict(obj):
             'comment': obj.comment,
             'casestudy': obj.casestudy,
             'items': obj.items,
-            'correct_answer':obj.correct_answer
+            'correct_answer': obj.correct_answer
         }
+

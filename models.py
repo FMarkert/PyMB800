@@ -22,25 +22,22 @@ class Base_Question:
 
 
 class Drag_Drop_Order(Base_Question):
-    def __init__(self,id,question_text,src,type,comment,casestudy,items,correct_answer):
+    def __init__(self,id,question_text,src,type,comment,casestudy,items):
         super().__init__(id,question_text,src,type,comment,casestudy)
         self.items = items
-        self.correct_answer = correct_answer
         print("Drag_Drop_Order Frage erstellt") #Test
-    def display_c_answer(self):
-        return self.correct_answer
     def check_answer(self, user_answer):
         return user_answer == self.correct_answer
 
     
 class Drag_Drop_Pairs(Base_Question):
-    def __init__(self,id,question_text,src,type,comment,casestudy,pairs):
+    def __init__(self,id,question_text,src,type,comment,casestudy,items):
         super().__init__(id,question_text,src,type,comment,casestudy)
-        self.pairs = pairs 
+        self.items = items 
     def display_pairs(self):
-        return self.pairs 
+        return self.items 
     def check_answer(self, user_answer):
-        return user_answer == self.pairs
+        return user_answer == self.items
 
 class Dropdown(Base_Question):
     def __init__(self,id,question_text,src,type,comment,casestudy,items,correct_answer):
