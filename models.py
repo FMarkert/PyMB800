@@ -26,7 +26,7 @@ class Drag_Drop_Order(Base_Question):
         super().__init__(id,question_text,src,type,comment,casestudy)
         self.items = items
         self.correct_answer = correct_answer
-        print("Drag_Drop_Order Frage erstellet") #Test
+        print("Drag_Drop_Order Frage erstellt") #Test
     def display_c_answer(self):
         return self.correct_answer
     def check_answer(self, user_answer):

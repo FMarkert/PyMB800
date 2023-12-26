@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Quiz</title>
     <style>
+        /* Dein CSS-Styling */
         body {
             font-family: 'Roboto', sans-serif;
             text-align: center;
@@ -11,36 +12,60 @@
         .question {
             margin: 20px;
         }
-        .buttons {
-            position: absolute;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-        button {
+        .drag-item {
             margin: 5px;
+            padding: 5px;
+            background-color: #f0f0f0;
+            border: 1px solid #ddd;
+            cursor: pointer;
         }
+        .drop-zone {
+            margin: 5px;
+            padding: 10px;
+            background-color: #f8f8f8;
+            border: 2px dashed #ddd;
+        }
+        /* Weitere Styles hier hinzufügen */
     </style>
 </head>
 <body>
+    <!-- Debug-Ausgabe -->
+    <div style="background-color: lightgrey; padding: 10px; margin-bottom: 20px;">
+        <strong>Debug-Information:</strong>
+        <pre>{{ question | tojson(indent=2) }}</pre>
+    </div>
+
     <div class="question">
         <h2>Frage {{ question_index + 1 }} von {{ total_questions }}</h2>
         <p>{{ question.question_text }}</p>
-    </div>
+
     
+    <!-- Navigationsbuttons -->
     <div class="buttons">
-        <!-- Navigation zwischen den Fragen -->
         <button onclick="location.href='/change_question?direction=prev'">Vorherige Frage</button>
         <button onclick="location.href='/change_question?direction=next'">Nächste Frage</button>
-
-        <!-- Button zum Beenden des Quiz -->
         <button onclick="confirmExit()">Quiz Beenden</button>
     </div>
 
+    <!-- JavaScript für Drag & Drop und andere Funktionen -->
     <script>
+        function dragStart(event) {
+            event.dataTransfer.setData("text/plain", event.target.id);
+        }
+
+        function allowDrop(event) {
+            event.preventDefault();
+        }
+
+        function drop(event) {
+            event.preventDefault();
+            var data = event.dataTransfer.getData("text");
+            event.target.appendChild(document.getElementById(data));
+        }
+
         function confirmExit() {
             if (confirm("Bist du sicher, dass du das Quiz beenden möchtest?")) {
-                location.href = '/end_quiz';  // Leite zur End-Quiz Route um
+                location.href = '/end_quiz';
             }
         }
     </script>
