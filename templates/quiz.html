@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Quiz</title>
     <style>
-        /* Dein CSS-Styling */
+        /* Ihr CSS-Styling */
         body {
             font-family: 'Roboto', sans-serif;
             text-align: center;
@@ -12,61 +12,53 @@
         .question {
             margin: 20px;
         }
-        .drag-item {
-            margin: 5px;
-            padding: 5px;
-            background-color: #f0f0f0;
-            border: 1px solid #ddd;
-            cursor: pointer;
-        }
-        .drop-zone {
-            margin: 5px;
-            padding: 10px;
-            background-color: #f8f8f8;
-            border: 2px dashed #ddd;
+        .answer-option {
+            margin: 10px 0;
         }
         /* Weitere Styles hier hinzufügen */
     </style>
 </head>
 <body>
-    <!-- Debug-Ausgabe -->
-    <div style="background-color: lightgrey; padding: 10px; margin-bottom: 20px;">
-        <strong>Debug-Information:</strong>
-        <pre>{{ question | tojson(indent=2) }}</pre>
-    </div>
+    <form action="/submit_answer" method="post">
+        <div class="question">
+            <h2>Frage {{ question_index + 1 }} von {{ total_questions }}</h2>
+            <p>{{ question.question_text }}</p>
 
-    <div class="question">
-        <h2>Frage {{ question_index + 1 }} von {{ total_questions }}</h2>
-        <p>{{ question.question_text }}</p>
+            <!-- Bereich für die Antwortoptionen, dynamisch anhand des Fragetyps -->
+            <div class="answers">
+                {% if question.type == 'multiple_choice' %}
+                    <!-- Direkter Zugriff auf das items Dictionary -->
+                    {% for key, value in question["items"].items() %}
+                        <div class="answer-option">
+                            <label>
+                                <input type="checkbox" name="answer_{{ question.id }}" value="{{ key }}"> {{ value }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% endif %}
 
-    
-    <!-- Navigationsbuttons -->
+                <!-- Code für andere Fragetypen hinzufügen -->
+            </div>
+        </div>
+
+        <!-- Navigationsbuttons -->
+        <div class="buttons">
+            <button type="submit">Antworten senden</button>
+        </div>
+    </form>
+
     <div class="buttons">
         <button onclick="location.href='/change_question?direction=prev'">Vorherige Frage</button>
         <button onclick="location.href='/change_question?direction=next'">Nächste Frage</button>
         <button onclick="confirmExit()">Quiz Beenden</button>
     </div>
 
-    <!-- JavaScript für Drag & Drop und andere Funktionen -->
+    <!-- JavaScript für zusätzliche Funktionen -->
     <script>
-        function dragStart(event) {
-            event.dataTransfer.setData("text/plain", event.target.id);
-        }
-
-        function allowDrop(event) {
-            event.preventDefault();
-        }
-
-        function drop(event) {
-            event.preventDefault();
-            var data = event.dataTransfer.getData("text");
-            event.target.appendChild(document.getElementById(data));
-        }
-
         function confirmExit() {
-            if (confirm("Bist du sicher, dass du das Quiz beenden möchtest?")) {
-                location.href = '/end_quiz';
-            }
+         if (confirm("Dude, bist du sicher, dass du das Quiz beenden möchtest?")) {
+            location.href = "/end_quiz";
+         }
         }
     </script>
 </body>
