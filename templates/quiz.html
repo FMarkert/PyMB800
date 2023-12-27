@@ -15,15 +15,23 @@
         .answer-option {
             margin: 10px 0;
         }
+        .drag-drop-area {
+            border: 2px dashed #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .draggable-item {
+            border: 1px solid #ddd;
+            padding: 8px;
+            margin-bottom: 4px;
+            background-color: #f8f8f8;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
         /* Weitere Styles hier hinzufügen */
     </style>
 </head>
 <body>
-        <!-- Debug-Ausgabe der aktuellen Frage -->
-        <div style="background-color: lightgrey; padding: 10px; margin-bottom: 20px;">
-            <strong>Debug-Information (Aktuelle Frage):</strong>
-            <pre>{{ question | tojson(indent=2) }}</pre>
-        </div>
     <form action="/submit_answer" method="post">
         <div class="question">
             <h2>Frage {{ question_index + 1 }} von {{ total_questions }}</h2>
@@ -32,7 +40,7 @@
             <!-- Bereich für die Antwortoptionen, dynamisch anhand des Fragetyps -->
             <div class="answers">
                 {% if question.type == 'multiple_choice' %}
-                    <!-- Direkter Zugriff auf das items Dictionary -->
+                    <!-- Code für Multiple-Choice-Fragen -->
                     {% for key, value in question["items"].items() %}
                         <div class="answer-option">
                             <label>
@@ -41,19 +49,27 @@
                         </div>
                     {% endfor %}
                 {% elif question.type == 'dropdown' %}
-                {% for key, item in question["items"].items() %}
-                <div class="answer-option">
-                    <label>{{ item.text }}</label>
-                    <select name="answer_{{ question.id }}_{{ key }}">
-                        {% for option in item.options %}
-                            <option value="{{ option }}">{{ option }}</option>
+                    <!-- Code für Dropdown-Fragen -->
+                    {% for key, item in question["items"].items() %}
+                        <div class="answer-option">
+                            <label>{{ item.text }}</label>
+                            <select name="answer_{{ question.id }}_{{ key }}">
+                                {% for option in item.options %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endfor %}
+                {% elif question.type == 'drag_drop_order' %}
+                    <!-- Code für Drag-and-Drop-Order-Fragen -->
+                    <div class="drag-drop-area">
+                        {% for key, value in question["items"].items() %}
+                            <div class="draggable-item" draggable="true" id="item-{{ key }}">
+                                {{ value }}
+                            </div>
                         {% endfor %}
-                    </select>
-                </div>
-            {% endfor %}
-        {% endif %}
-
-                <!-- Code für andere Fragetypen hinzufügen -->
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -75,6 +91,45 @@
             if (confirm("Dude, bist du sicher, dass du das Quiz beenden möchtest?")) {
                 location.href = "/end_quiz";
             }
+        }
+    </script>
+    <script>
+        let draggables = document.querySelectorAll('.draggable-item');
+        let dragContainer = document.querySelector('.drag-drop-area');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        dragContainer.addEventListener('dragover', e => {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(dragContainer, e.clientY);
+            const draggable = document.querySelector('.dragging');
+            if (afterElement == null) {
+                dragContainer.appendChild(draggable);
+            } else {
+                dragContainer.insertBefore(draggable, afterElement);
+            }
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
         }
     </script>
 </body>

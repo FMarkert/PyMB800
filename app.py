@@ -11,6 +11,16 @@ app.secret_key = os.urandom(24)  # Ein zufälliger Schlüssel für Sessions
 def index():
     return render_template('index.html')
 
+
+@app.route('/test')
+def test():
+    items = {
+        "Customer Posting Group": "Specific posting group",
+        "Gen. Business Posting Group": "General posting group",
+        # Füge hier weitere Paare hinzu
+    }
+    return render_template('test.html', items=items)
+
 @app.route('/start_demo')
 def demo():
     questions, errors = utils.start_demo()
