@@ -19,6 +19,11 @@
     </style>
 </head>
 <body>
+        <!-- Debug-Ausgabe der aktuellen Frage -->
+        <div style="background-color: lightgrey; padding: 10px; margin-bottom: 20px;">
+            <strong>Debug-Information (Aktuelle Frage):</strong>
+            <pre>{{ question | tojson(indent=2) }}</pre>
+        </div>
     <form action="/submit_answer" method="post">
         <div class="question">
             <h2>Frage {{ question_index + 1 }} von {{ total_questions }}</h2>
@@ -35,7 +40,18 @@
                             </label>
                         </div>
                     {% endfor %}
-                {% endif %}
+                {% elif question.type == 'dropdown' %}
+                {% for key, item in question["items"].items() %}
+                <div class="answer-option">
+                    <label>{{ item.text }}</label>
+                    <select name="answer_{{ question.id }}_{{ key }}">
+                        {% for option in item.options %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            {% endfor %}
+        {% endif %}
 
                 <!-- Code für andere Fragetypen hinzufügen -->
             </div>
@@ -56,9 +72,9 @@
     <!-- JavaScript für zusätzliche Funktionen -->
     <script>
         function confirmExit() {
-         if (confirm("Dude, bist du sicher, dass du das Quiz beenden möchtest?")) {
-            location.href = "/end_quiz";
-         }
+            if (confirm("Dude, bist du sicher, dass du das Quiz beenden möchtest?")) {
+                location.href = "/end_quiz";
+            }
         }
     </script>
 </body>
