@@ -79,6 +79,27 @@
                             </li>
                         {% endfor %}
                     </ul>
+                {% elif question.type == 'multiple_choice' %}
+                    <!-- Code für Multiple-Choice-Fragen -->
+                    {% for key, value in question["items"].items() %}
+                        <div class="answer-option">
+                            <label>
+                                <input type="checkbox" name="answer_{{ question.id }}" value="{{ key }}"> {{ value }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% elif question.type == 'dropdown' %}
+                    <!-- Code für Dropdown-Fragen -->
+                    {% for key, item in question["items"].items() %}
+                        <div class="answer-option">
+                            <label>{{ item.text }}</label>
+                            <select name="answer_{{ question.id }}_{{ key }}">
+                                {% for option in item.options %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endfor %}
                 {% endif %}
             </div>
         </div>
