@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz</title>
+    <style>
+        /* Ihr CSS-Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+        }
+        .question {
+            margin: 20px;
+        }
+        .answer-option {
+            margin: 10px 0;
+        }
+        .drag-drop-area {
+            border: 2px dashed #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .draggable-item {
+            border: 1px solid #ddd;
+            padding: 8px;
+            margin-bottom: 4px;
+            background-color: #f8f8f8;
+            cursor: move;
+            transition: all 0.3s ease;
+        }
+        /* Weitere Styles hier hinzufügen */
+    </style>
+</head>
+<body>
+    <form action="/submit_answer" method="post">
+        <div class="question">
+            <h2>Frage {{ question_index + 1 }} von {{ total_questions }}</h2>
+            <p>{{ question.question_text }}</p>
+
+            <!-- Bereich für die Antwortoptionen, dynamisch anhand des Fragetyps -->
+            <div class="answers">
+                {% if question.type == 'multiple_choice' %}
+                    <!-- Code für Multiple-Choice-Fragen -->
+                    {% for key, value in question["items"].items() %}
+                        <div class="answer-option">
+                            <label>
+                                <input type="checkbox" name="answer_{{ question.id }}" value="{{ key }}"> {{ value }}
+                            </label>
+                        </div>
+                    {% endfor %}
+                {% elif question.type == 'dropdown' %}
+                    <!-- Code für Dropdown-Fragen -->
+                    {% for key, item in question["items"].items() %}
+                        <div class="answer-option">
+                            <label>{{ item.text }}</label>
+                            <select name="answer_{{ question.id }}_{{ key }}">
+                                {% for option in item.options %}
+                                    <option value="{{ option }}">{{ option }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                    {% endfor %}
+                {% elif question.type == 'drag_drop_order' %}
+                    <!-- Code für Drag-and-Drop-Order-Fragen -->
+                    <div class="drag-drop-area">
+                        {% for key, value in question["items"].items() %}
+                            <div class="draggable-item" draggable="true" id="item-{{ key }}">
+                                {{ value }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Navigationsbuttons -->
+        <div class="buttons">
+            <button type="submit">Antworten senden</button>
+        </div>
+    </form>
+
+    <div class="buttons">
+        <button onclick="location.href='/change_question?direction=prev'">Vorherige Frage</button>
+        <button onclick="location.href='/change_question?direction=next'">Nächste Frage</button>
+        <button onclick="confirmExit()">Quiz Beenden</button>
+    </div>
+
+    <!-- JavaScript für zusätzliche Funktionen -->
+    <script>
+        function confirmExit() {
+            if (confirm("Dude, bist du sicher, dass du das Quiz beenden möchtest?")) {
+                location.href = "/end_quiz";
+            }
+        }
+    </script>
+    <script>
+        let draggables = document.querySelectorAll('.draggable-item');
+        let dragContainer = document.querySelector('.drag-drop-area');
+
+        draggables.forEach(draggable => {
+            draggable.addEventListener('dragstart', () => {
+                draggable.classList.add('dragging');
+            });
+
+            draggable.addEventListener('dragend', () => {
+                draggable.classList.remove('dragging');
+            });
+        });
+
+        dragContainer.addEventListener('dragover', e => {
+            e.preventDefault();
+            const afterElement = getDragAfterElement(dragContainer, e.clientY);
+            const draggable = document.querySelector('.dragging');
+            if (afterElement == null) {
+                dragContainer.appendChild(draggable);
+            } else {
+                dragContainer.insertBefore(draggable, afterElement);
+            }
+        });
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.draggable-item:not(.dragging)')];
+
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+    </script>
+</body>
+</html>
