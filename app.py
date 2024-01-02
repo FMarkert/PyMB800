@@ -6,11 +6,9 @@ import os
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Ein zufälliger Schlüssel für Sessions
 
-
 @app.route('/')
 def index():
     return render_template('index.html')
-
 
 @app.route('/test')
 def test():
@@ -42,7 +40,6 @@ def quiz():
     questions = session.get('questions', [])
 
     if not questions:
-        # Keine Fragen geladen, leite zur Startseite um
         return redirect(url_for('index'))
 
     current_question = questions[current_question_index]
@@ -64,13 +61,41 @@ def change_question():
 
 @app.route('/end_quiz')
 def end_quiz():
-    # Setze die gesamte Session zurück
     session.clear()
+    return redirect(url_for('index'))
 
-    # Hier könntest du auch das Quiz-Ergebnis speichern oder weitere Aktionen durchführen
+@app.route('/submit_answer', methods=['POST'])
+def submit_answer():
+    current_question_index = session.get('current_question_index', 0)
+    questions = session.get('questions', [])
+    current_question = questions[current_question_index]
 
-    return redirect(url_for('index'))  # Leite zurück zur Startseite
+    # Debugging: Ausgabe der POST-Daten
+    print("POST-Daten:", request.form)
 
+    if current_question['type'] == 'drag_drop_order':
+        user_answer = {}
+        ordered_ids = request.form.getlist('order-list')
+        for index, item_id in enumerate(ordered_ids):
+            user_answer[str(index + 1)] = current_question['items'][item_id]
+
+
+    elif current_question['type'] == 'drag_drop_pairs':
+        user_answer = {}
+        keys_order = request.form.get('keys-order').split(',')
+        values_order = request.form.get('values-order').split(',')
+        for key, value in zip(keys_order, values_order):
+            user_answer[key] = current_question['items'][value]
+
+    elif current_question['type'] in ['dropdown', 'multiple_choice']:
+        user_answer = request.form.getlist(f'answer_{current_question["id"]}')
+        is_correct = user_answer == current_question['correct_answer']
+        # Hier könnte die Verarbeitung der Antwort erfolgen
+
+    # Andere Frage-Typen können hier hinzugefügt werden
+
+    session['current_question_index'] = min(current_question_index + 1, len(questions) - 1)
+    return redirect(url_for('quiz'))
 
 if __name__ == '__main__':
     app.run(debug=True)
