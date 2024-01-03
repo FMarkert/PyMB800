@@ -40,6 +40,7 @@ def checkpage():
 @app.route('/quiz')
 def quiz():
     current_question_index = session.get('current_question_index', 0)
+
     questions = session.get('questions', [])
 
     if not questions:
@@ -83,7 +84,6 @@ def submit_answer():
         return redirect(url_for('index'))
 
     current_question = questions[current_question_index]
-    user_answers = session.get('user_answers', {})
 
     # Debugging: Ausgabe der POST-Daten
     print("POST-Daten:", request.form)
@@ -96,7 +96,7 @@ def submit_answer():
         print(current_question['items'])
         print(f"user_answer = {user_answer}")
         user_result = utils.check_answer(current_question, user_answer)
-        print(user_result)
+        print(f"{current_question['id']} : {user_result}")
 
     elif current_question['type'] == 'drag_drop_pairs':
         user_answer = {}
@@ -105,17 +105,14 @@ def submit_answer():
         for key, value in zip(keys_order, values_order):
             user_answer[key] = current_question['items'][value]
         user_result = utils.check_answer(current_question, user_answer)
-        print(user_result)
+        print(f"{current_question['id']} : {user_result}")
 
     elif current_question['type'] in ['dropdown', 'multiple_choice']:
         user_answer = request.form.getlist(f'answer_{current_question["id"]}')
         user_result = utils.check_answer(current_question, user_answer)
-        print(user_result)
+        print(f"{current_question['id']} : {user_result}")
 
-    # Speichern der Benutzerantworten
-    user_answers[current_question['id']] = user_answer
-    session['user_answers'] = user_answers
-    print(user_answers)
+  
 
     # Aktualisieren des Frage-Indexes
     session['current_question_index'] = min(current_question_index + 1, len(questions) - 1)
