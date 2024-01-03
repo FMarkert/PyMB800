@@ -96,7 +96,8 @@ def submit_answer():
         print(current_question['items'])
         print(f"user_answer = {user_answer}")
         user_result = utils.check_answer(current_question, user_answer)
-        print(f"{current_question['id']} : {user_result}")
+        print(f"User_Answer = {current_question['id']} : {user_answer}")
+        print(f"User_Result = {current_question['id']} : {user_result}")
 
     elif current_question['type'] == 'drag_drop_pairs':
         user_answer = {}
@@ -105,14 +106,24 @@ def submit_answer():
         for key, value in zip(keys_order, values_order):
             user_answer[key] = current_question['items'][value]
         user_result = utils.check_answer(current_question, user_answer)
-        print(f"{current_question['id']} : {user_result}")
+        print(f"User_Answer = {current_question['id']} : {user_answer}")
+        print(f"User_Result = {current_question['id']} : {user_result}")
 
-    elif current_question['type'] in ['dropdown', 'multiple_choice']:
+    elif current_question['type'] == 'dropdown':
         user_answer = request.form.getlist(f'answer_{current_question["id"]}')
         user_result = utils.check_answer(current_question, user_answer)
-        print(f"{current_question['id']} : {user_result}")
+        print(f"User_Answer = {current_question['id']} : {user_answer}")
+        print(f"User_Result = {current_question['id']} : {user_result}")
 
-  
+    elif current_question['type'] == 'multiple_choice':
+        user_answer = []
+        for key in request.form.keys():
+                user_answer =request.form.getlist(key)
+        print(f"User_Answer = {current_question['id']} : {user_answer}")
+        user_result = utils.check_answer(current_question, user_answer)
+        print(f"User_Result = {current_question['id']} : {user_result}")
+
+#answer_{{ question.id }}[]
 
     # Aktualisieren des Frage-Indexes
     session['current_question_index'] = min(current_question_index + 1, len(questions) - 1)
