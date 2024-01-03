@@ -96,7 +96,7 @@ def submit_answer():
         for index, item_id in enumerate(ordered_ids):
             user_answer[str(index + 1)] = current_question['items'][item_id]
         user_result[current_question['id']] = utils.check_answer(current_question, user_answer) 
-        user_results.append(user_result)
+        user_results = utils.catch_results(user_result,current_question,user_results)
         session['user_results'] = user_results
 
         print(f"User_Answer = {current_question['id']} : {user_answer}")
@@ -111,7 +111,7 @@ def submit_answer():
         for key, value in zip(keys_order, values_order):
             user_answer[key] = current_question['items'][value]
         user_result[current_question['id']] = utils.check_answer(current_question, user_answer) 
-        user_results.append(user_result)
+        user_results = utils.catch_results(user_result,current_question,user_results)
         session['user_results'] = user_results
         print(f"User_Answer = {current_question['id']} : {user_answer}")
         print(f"User_Result = {current_question['id']} : {user_result}")
@@ -123,7 +123,6 @@ def submit_answer():
         user_answer = request.form.getlist(f'answer_{current_question["id"]}')
         user_result[current_question['id']] = utils.check_answer(current_question, user_answer)
         
-        # Flag, um zu überprüfen, ob der Schlüssel bereits existiert
         user_results = utils.catch_results(user_result,current_question,user_results)
 
         session['user_results'] = user_results
@@ -140,7 +139,7 @@ def submit_answer():
                 user_answer = request.form.getlist(key)
         print(f"User_Answer = {current_question['id']} : {user_answer}")
         user_result[current_question['id']] = utils.check_answer(current_question, user_answer)
-        user_results.append(user_result)
+        user_results = utils.catch_results(user_result,current_question,user_results)
         session['user_results'] = user_results
         print(f"User_Result = {current_question['id']} : {user_result}")
         print(f"User_Results = {user_results}")
