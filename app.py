@@ -73,6 +73,7 @@ def end_quiz():
 def submit_answer():
     current_question_index = session.get('current_question_index', 0)
     questions = session.get('questions', [])
+    user_results = session.get('user_results', [])
 
     # Debugging-Ausgaben
     print(f"Current question index: {current_question_index}")
@@ -90,40 +91,56 @@ def submit_answer():
 
     if current_question['type'] == 'drag_drop_order':
         user_answer = {}
+        user_result = {}
         ordered_ids = request.form.getlist('order-list')
         for index, item_id in enumerate(ordered_ids):
             user_answer[str(index + 1)] = current_question['items'][item_id]
-        print(current_question['items'])
-        print(f"user_answer = {user_answer}")
-        user_result = utils.check_answer(current_question, user_answer)
+        user_result[current_question['id']] = utils.check_answer(current_question, user_answer) 
+        user_results.append(user_result)
+        session['user_results'] = user_results
+
         print(f"User_Answer = {current_question['id']} : {user_answer}")
         print(f"User_Result = {current_question['id']} : {user_result}")
+        print(f"User_Results = {user_results}")
 
     elif current_question['type'] == 'drag_drop_pairs':
         user_answer = {}
+        user_result = {}
         keys_order = request.form.get('keys-order').split(',')
         values_order = request.form.get('values-order').split(',')
         for key, value in zip(keys_order, values_order):
             user_answer[key] = current_question['items'][value]
-        user_result = utils.check_answer(current_question, user_answer)
+        user_result[current_question['id']] = utils.check_answer(current_question, user_answer) 
+        user_results.append(user_result)
+        session['user_results'] = user_results
         print(f"User_Answer = {current_question['id']} : {user_answer}")
         print(f"User_Result = {current_question['id']} : {user_result}")
+        print(f"User_Results = {user_results}")
+        
 
     elif current_question['type'] == 'dropdown':
+        user_result = {}
         user_answer = request.form.getlist(f'answer_{current_question["id"]}')
-        user_result = utils.check_answer(current_question, user_answer)
+        user_result[current_question['id']] = utils.check_answer(current_question, user_answer)
+        user_results.append(user_result)
+        session['user_results'] = user_results
         print(f"User_Answer = {current_question['id']} : {user_answer}")
         print(f"User_Result = {current_question['id']} : {user_result}")
+        print(f"User_Results = {user_results}")
+        
 
     elif current_question['type'] == 'multiple_choice':
+        user_result = {}
         user_answer = []
         for key in request.form.keys():
-                user_answer =request.form.getlist(key)
+                user_answer = request.form.getlist(key)
         print(f"User_Answer = {current_question['id']} : {user_answer}")
-        user_result = utils.check_answer(current_question, user_answer)
+        user_result[current_question['id']] = utils.check_answer(current_question, user_answer)
+        user_results.append(user_result)
+        session['user_results'] = user_results
         print(f"User_Result = {current_question['id']} : {user_result}")
-
-#answer_{{ question.id }}[]
+        print(f"User_Results = {user_results}")
+        
 
     # Aktualisieren des Frage-Indexes
     session['current_question_index'] = min(current_question_index + 1, len(questions) - 1)

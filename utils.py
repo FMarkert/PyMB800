@@ -109,7 +109,7 @@ def start_demo():
     directory = gamemode_directory(gamemode)
     questions, errors = json_to_object(directory)
     user_answers = {}
-    user_results = {}
+    user_results = []
     return questions, errors, user_answers, user_results
 
 def object_to_dict(obj):
