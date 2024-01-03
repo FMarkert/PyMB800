@@ -141,3 +141,16 @@ def check_answer(current_question, user_answer):
     else:
         user_result = user_answer == current_question['correct_answer']
     return user_result
+
+def catch_results(user_result,current_question,user_results):
+        key_found = False
+
+        for i, d in enumerate(user_results):
+            if str(current_question['id']) in d:
+                user_results[i] = user_result
+                key_found = True
+                break
+        if not key_found:
+            user_results.append(user_result)
+
+        return user_results

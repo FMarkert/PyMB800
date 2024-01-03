@@ -122,11 +122,15 @@ def submit_answer():
         user_result = {}
         user_answer = request.form.getlist(f'answer_{current_question["id"]}')
         user_result[current_question['id']] = utils.check_answer(current_question, user_answer)
-        user_results.append(user_result)
+        
+        # Flag, um zu überprüfen, ob der Schlüssel bereits existiert
+        user_results = utils.catch_results(user_result,current_question,user_results)
+
         session['user_results'] = user_results
         print(f"User_Answer = {current_question['id']} : {user_answer}")
         print(f"User_Result = {current_question['id']} : {user_result}")
         print(f"User_Results = {user_results}")
+
         
 
     elif current_question['type'] == 'multiple_choice':
