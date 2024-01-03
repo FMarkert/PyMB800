@@ -108,7 +108,9 @@ def start_demo():
     gamemode = "l4d_1-40"
     directory = gamemode_directory(gamemode)
     questions, errors = json_to_object(directory)
-    return questions, errors
+    user_answers = {}
+    user_results = {}
+    return questions, errors, user_answers, user_results
 
 def object_to_dict(obj):
     if obj.type == 'drag_drop_pairs' or obj.type == 'drag_drop_order':
@@ -133,3 +135,9 @@ def object_to_dict(obj):
             'correct_answer': obj.correct_answer
         }
 
+def check_answer(current_question, user_answer):
+    if current_question['type'] == 'drag_drop_order' or current_question['type'] == 'drag_drop_pairs':
+        user_result = user_answer == current_question['items']
+    else:
+        user_result = user_answer == current_question['correct_answer']
+    return user_result

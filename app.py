@@ -21,9 +21,12 @@ def test():
 
 @app.route('/start_demo')
 def demo():
-    questions, errors = utils.start_demo()
+    questions, errors, user_answers, user_results = utils.start_demo()
     session['questions'] = questions
     session['errors'] = errors
+    session['user_answers'] = user_answers
+    session['user_results'] = user_results
+
     return redirect(url_for('checkpage'))
 
 @app.route('/checkpage')
@@ -44,6 +47,7 @@ def quiz():
 
     current_question = questions[current_question_index]
     return render_template('quiz.html', question=current_question, question_index=current_question_index, total_questions=len(questions))
+    
 
 @app.route('/change_question')
 def change_question():
@@ -68,7 +72,18 @@ def end_quiz():
 def submit_answer():
     current_question_index = session.get('current_question_index', 0)
     questions = session.get('questions', [])
+
+    # Debugging-Ausgaben
+    print(f"Current question index: {current_question_index}")
+    print(f"Number of questions: {len(questions)}")
+
+    # Überprüfung, ob der Index im gültigen Bereich liegt
+    if current_question_index >= len(questions):
+        print("Error: current_question_index is out of range.")
+        return redirect(url_for('index'))
+
     current_question = questions[current_question_index]
+    user_answers = session.get('user_answers', {})
 
     # Debugging: Ausgabe der POST-Daten
     print("POST-Daten:", request.form)
@@ -78,7 +93,10 @@ def submit_answer():
         ordered_ids = request.form.getlist('order-list')
         for index, item_id in enumerate(ordered_ids):
             user_answer[str(index + 1)] = current_question['items'][item_id]
-
+        print(current_question['items'])
+        print(f"user_answer = {user_answer}")
+        user_result = utils.check_answer(current_question, user_answer)
+        print(user_result)
 
     elif current_question['type'] == 'drag_drop_pairs':
         user_answer = {}
@@ -86,16 +104,23 @@ def submit_answer():
         values_order = request.form.get('values-order').split(',')
         for key, value in zip(keys_order, values_order):
             user_answer[key] = current_question['items'][value]
+        user_result = utils.check_answer(current_question, user_answer)
+        print(user_result)
 
     elif current_question['type'] in ['dropdown', 'multiple_choice']:
         user_answer = request.form.getlist(f'answer_{current_question["id"]}')
-        is_correct = user_answer == current_question['correct_answer']
-        # Hier könnte die Verarbeitung der Antwort erfolgen
+        user_result = utils.check_answer(current_question, user_answer)
+        print(user_result)
 
-    # Andere Frage-Typen können hier hinzugefügt werden
+    # Speichern der Benutzerantworten
+    user_answers[current_question['id']] = user_answer
+    session['user_answers'] = user_answers
+    print(user_answers)
 
+    # Aktualisieren des Frage-Indexes
     session['current_question_index'] = min(current_question_index + 1, len(questions) - 1)
     return redirect(url_for('quiz'))
 
 if __name__ == '__main__':
     app.run(debug=True)
+
