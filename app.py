@@ -143,11 +143,31 @@ def submit_answer():
         session['user_results'] = user_results
         print(f"User_Result = {current_question['id']} : {user_result}")
         print(f"User_Results = {user_results}")
-        
 
-    # Aktualisieren des Frage-Indexes
-    session['current_question_index'] = min(current_question_index + 1, len(questions) - 1)
-    return redirect(url_for('quiz'))
+
+    if current_question_index == len(questions) - 1: #Überprüft und aktualisiert Frageindex 
+            return redirect(url_for('results'))
+    else:
+        session['current_question_index'] = min(current_question_index + 1, len(questions) - 1)
+        return redirect(url_for('quiz'))
+
+
+@app.route('/results')
+def results():
+    user_results = session.get('user_results', [])
+    total_questions = len(user_results)
+    correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
+
+    # Berechne den Prozentsatz der korrekten Antworten
+    percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+
+    return render_template('results.html', user_results=user_results, 
+                           total_questions=total_questions, 
+                           correct_answers=correct_answers,
+                           percentage_correct=percentage_correct)
+
+
+
 
 if __name__ == '__main__':
     app.run(debug=True)
