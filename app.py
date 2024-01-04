@@ -1,6 +1,8 @@
 import utils
 import models
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import Flask, render_template, session, request, redirect, url_for, make_response
+from weasyprint import HTML
+import io
 import os
 
 app = Flask(__name__)
@@ -166,6 +168,9 @@ def results():
                            correct_answers=correct_answers,
                            percentage_correct=percentage_correct)
 
+@app.route('/generate_pdf')
+def generate_pdf():
+    pass
 
 
 
