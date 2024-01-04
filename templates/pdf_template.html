@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Details</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+        }
+        .question-container {
+            margin: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+        }
+        .question-title {
+            font-weight: bold;
+        }
+        .answer-section {
+            text-align: left;
+            margin: 10px 0;
+        }
+        .correct-answer, .user-answer {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="results-container">
+        <h1>Deine Ergebnisse</h1>
+        <p>Du hast {{ correct_answers }} von {{ total_questions }} Fragen richtig beantwortet.</p>
+        <p>Das entspricht {{ percentage_correct }}%.</p>
+        {% if percentage_correct >= 95 %}
+            <p>Herzlichen Glückwunsch! Du hast hervorragende Leistungen gezeigt!</p>
+        {% elif 80 <= percentage_correct < 95 %}
+            <p>Gut gemacht! Du bist fast da. Übe weiter, um 95% zu erreichen!</p>
+        {% else %}
+            <p>Mach dir keine Sorgen! Übung macht den Meister. Versuche es weiter!</p>
+        {% endif %}
+    </div>
+
+    {% for question in questions %}
+        {% set user_answer = user_answers_list | selectattr('id', 'equalto', question.id) | list | first %}
+        <div class="question-container">
+            <div class="question-title">{{ question.question_text }}</div>
+            <div class="answer-section">
+                <div class="correct-answer">Richtige Antwort: {{ question.correct_answer if question.correct_answer else question.items }}</div>
+                <div class="user-answer">Deine Antwort: {{ user_answer }}</div>
+            </div>
+        </div>
+    {% endfor %}
+</body>
+</html>

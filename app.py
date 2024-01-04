@@ -36,6 +36,7 @@ def checkpage():
     directory = session.get('directory')
     questions = session.get('questions', [])
     errors = session.get('errors', [])
+    print(questions)
     return render_template('check_page.html', base_dir=base_dir, directory=directory, questions=questions, errors=errors)
 
 @app.route('/quiz')
@@ -67,6 +68,7 @@ def change_question():
 
 @app.route('/end_quiz')
 def end_quiz():
+    
     session.clear()
     return redirect(url_for('index'))
 
@@ -189,7 +191,17 @@ def generate_pdf():
     total_questions = len(user_results)
     correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
     percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
-    pass
+    html_template = render_template('pdf_template.html', questions=questions, user_results=user_results, user_answers_list=user_answers_list, total_questions =total_questions, percentage_correct=percentage_correct)
+
+    # Erstellen eines PDFs aus HTML
+    pdf = HTML(string=html_template).write_pdf()
+
+    # Erstellen einer Antwort und Senden des PDFs
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=quiz_details.pdf'
+
+    return response
 
 
 
