@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>Quizapp</title>
+    <!-- jQuery und jQuery UI Integration -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
+    <style>
+        #keys, #values {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            margin-right: 10px;
+            background: #ddd;
+            padding: 5px;
+            width: 200px;
+            min-height: 100px;
+            display: inline-block;
+            vertical-align: top;
+        }
+        .item {
+            margin: 5px;
+            padding: 5px;
+            background-color: #fff;
+            border: 1px solid #ddd;
+            cursor: pointer;
+        }
+        .correct {
+            background-color: #cfc;
+        }
+    </style>
+
+    <script>
+        $(function() {
+            $('.draggable').draggable({
+                revert: true
+            });
+            $('.droppable').droppable({
+                drop: function(event, ui) {
+                    var droppedKey = ui.draggable.text();
+                    var droppedValue = $(this).text();
+                    var items = {{ items|tojson }};
+                    if (items[droppedKey] === droppedValue) {
+                        $(this).addClass('correct');
+                    }
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="keys">
+        {% for key in items.keys() %}
+            <div class="item draggable">{{ key }}</div>
+        {% endfor %}
+    </div>
+    <div id="values">
+        {% for value in items.values() %}
+            <div class="item droppable">{{ value }}</div>
+        {% endfor %}
+    </div>
+</body>
+</html>
