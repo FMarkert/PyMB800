@@ -170,6 +170,13 @@ def results():
 
 @app.route('/generate_pdf')
 def generate_pdf():
+    questions = session.get('questions', [])
+    user_results = session.get('user_results', [])
+
+
+    total_questions = len(user_results)
+    correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
+    percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
     pass
 
 
