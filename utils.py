@@ -162,3 +162,63 @@ def catch_answer(user_answer,user_answers_list ,current_question):
     user_answers_list.append(user_answers)
     return user_answers_list
         
+
+def generate_print_data(questions_origin,user_answers_list):
+
+    print_list = []
+    questions = questions_origin
+        
+    for question in questions:
+            if question.get('type  ') == 'dropdown':  # Relevante Daten für Fragetyp Dropdown
+                id = question.get('id')
+                question_type = question.get('type')
+                question_text = question.get('question_text')
+                items_raw = question.get('items') # Dictionary - Schlüssel sind Nummerierung und Werte sind Dictionary mit Textteil der Antwort und den optionen
+                correct_answer = question.get('correct_answer')
+                user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
+                print_unit = [question_type, id, question_text, items_raw, correct_answer, user_answer]
+                print(print_unit)
+                print_list.append(print_unit)            
+
+                #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
+                # Item i, options, correct_answer i, user_answer i
+
+            elif question.get('type') == 'multiple_choice':
+                id = question.get('id')
+                question_type = question.get('type')
+
+                question_text = question.get('question_text')
+                items_raw = question.get('items') # Dictionary mit Aufzählung (A-Z) als Schlüssel und den Antwortmöglichkeiten als Werten
+                correct_answer = question.get('correct_answer') # Liste mit den Schlüsseln der korrekten Antworten
+                user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
+                print_unit = [question_type, id, question_text, items_raw, correct_answer, user_answer]
+                print_list.append(print_unit)
+                #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
+                # Werte aus items_raw aufgelistet untereinander mit den Schlüsseln als Aufzählungszeichen, dann correct_answer, dann user_answer
+            
+            elif question.get('type') == 'drag_drop_order':
+                id = question.get('id')
+                question_type = question.get('type')
+                question_text = question.get('question_text')
+                items_raw = question.get('items') # Dictionary mit Zahlen als String, die die Reihenfolge darstellen sollen als Schlüssel und der jeweiligen Antwort als Schlüssel
+                user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
+                print_unit = [question_type, id, question_text, items_raw, user_answer]
+                print_list.append(print_unit)
+            
+                
+                #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
+                # Werte aus items_raw aufgelistet untereinander mit den Schlüsseln als Aufzählungszeichen stellt die richtige Antwort da, danach user_answer in gleicher Form darstellen
+            
+            elif question.get('type') == 'drag_drop_pairs':
+                id = question.get('id')
+                question_type = question.get('type')
+                question_text = question.get('question_text')
+                items_raw = question.get('items') # Dictionary: Schlüssel und Wert geben immer ein Paar
+                user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
+                print_unit = [question_type, id, question_text, items_raw, user_answer]
+                print_list.append(print_unit)
+
+                #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
+                #Schlüssel und Werte aus items_raw sollen jeweils in einer eingenen Zeile aufgelistet untereinenderstehen, danach soll user_answer im gleichen Stil angezeigt werden
+    
+    return print_list

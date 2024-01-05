@@ -22,7 +22,9 @@ def test():
 @app.route('/start_demo')
 def demo():
     questions, errors, user_answers, user_results, user_answers_list = utils.start_demo()
+    questions_origin = questions
     session['questions'] = questions
+    session['questions_origin'] = questions_origin
     session['errors'] = errors
     session['user_answers'] = user_answers
     session['user_answers_list'] = user_answers_list
@@ -183,10 +185,11 @@ def results():
 
 @app.route('/generate_pdf')
 def generate_pdf():
-    questions = session.get('questions', [])
+    questions_origin = session.get('questions_origin', [])
     user_results = session.get('user_results', [])
     user_answers_list = session.get('user_answers_list', [])
 
+    print_list = utils.generate_print_data(questions_origin,user_answers_list)
 
     total_questions = len(user_results)
     correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
