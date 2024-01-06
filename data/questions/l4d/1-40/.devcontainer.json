@@ -1,0 +1,16 @@
+{
+    "name": "pymb800-flask",
+    "build": {
+        "dockerfile": "Dockerfile",
+        "context": "."
+    },
+    "customizations": {
+        "vscode": {
+            "settings": {
+                "terminal.integrated.shell.linux": "/bin/bash"
+            }
+        }
+    },
+    "forwardPorts": [5000],
+    "postCreateCommand": "pip install -r requirements.txt"
+}
