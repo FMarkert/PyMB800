@@ -1,3 +1,5 @@
+import random
+
 #Daten für PDF
 
 
@@ -71,3 +73,14 @@ for question in questions:
 
             #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
             #Schlüssel und Werte aus items_raw sollen jeweils in einer eingenen Zeile aufgelistet untereinenderstehen, danach soll user_answer im gleichen Stil angezeigt werden
+
+def shuffle_questionpool(questions): # Die Liste mit Fragen wird durchgemischt 
+    random.shuffle(questions)
+    for question in questions:
+        items = question["items"]
+        print(items)
+        pool = []
+        pool.append(items)
+    return pool
+
+shuffle_questionpool(questions)

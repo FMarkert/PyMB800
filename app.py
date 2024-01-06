@@ -1,7 +1,9 @@
 import utils
 from flask import Flask, render_template, session, request, redirect, url_for, make_response
 from weasyprint import HTML
+from random import shuffle
 import os
+
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)  # Ein zufälliger Schlüssel für Sessions
@@ -23,6 +25,7 @@ def test():
 def demo():
     questions, errors, user_answers, user_results, user_answers_list = utils.start_demo()
     questions_origin = questions
+    questions = utils.shuffle_questionpool(questions)
     session['questions'] = questions
     session['questions_origin'] = questions_origin
     session['errors'] = errors
@@ -46,7 +49,6 @@ def quiz():
     current_question_index = session.get('current_question_index', 0)
 
     questions = session.get('questions', [])
-
     if not questions:
         return redirect(url_for('index'))
 
@@ -117,7 +119,9 @@ def submit_answer():
         user_answer = {}
         user_result = {}
         keys_order = request.form.get('keys-order').split(',')
+      
         values_order = request.form.get('values-order').split(',')
+        print(f"values_order: {values_order}")
         for key, value in zip(keys_order, values_order):
             user_answer[key] = current_question['items'][value]
         user_result[current_question['id']] = utils.check_answer(current_question, user_answer) 

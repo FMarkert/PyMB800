@@ -71,7 +71,6 @@
                             </ul>
                         </div>
                     </div>
-                    <!-- Versteckte Felder für die Reihenfolge der Schlüssel und Werte -->
                     <input type="hidden" id="keys-order" name="keys-order">
                     <input type="hidden" id="values-order" name="values-order">
                 {% elif question.type == 'drag_drop_order' %}
@@ -80,7 +79,6 @@
                             <li class="sortable-item" id="item-{{ key }}">
                                 {{ value }}
                             </li>
-                            <!-- Verstecktes Feld für jedes Element -->
                             <input type="hidden" name="order-list" value="{{ key }}">
                         {% endfor %}
                     </ul>
@@ -126,6 +124,28 @@
         }
 
         document.addEventListener('DOMContentLoaded', () => {
+            // Ihre bestehenden Funktionen
+
+            // Funktion zum Mischen der Listen-Elemente
+            function shuffleList(listId) {
+                var list = document.getElementById(listId);
+                for (var i = list.children.length; i >= 0; i--) {
+                    list.appendChild(list.children[Math.random() * i | 0]);
+                }
+            }
+
+            // Mischen der Antwortmöglichkeiten
+            if (document.getElementById('keys-list')) {
+                shuffleList('keys-list');
+            }
+            if (document.getElementById('values-list')) {
+                shuffleList('values-list');
+            }
+            if (document.getElementById('order-list')) {
+                shuffleList('order-list');
+            }
+
+            // Initialisierung der Sortable-Listen
             if (document.getElementById('keys-list') && document.getElementById('values-list')) {
                 var updatePairOrder = function() {
                     var keysOrder = [];
@@ -154,7 +174,6 @@
                     onEnd: updatePairOrder
                 });
 
-                // Initialisieren der Reihenfolge
                 updatePairOrder();
             }
 

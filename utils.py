@@ -103,6 +103,11 @@ def json_to_object(directory):
 
 def shuffle_questionpool(questions): # Die Liste mit Fragen wird durchgemischt 
     random.shuffle(questions)
+    for question in questions:
+        items = question["items"]
+
+
+    return questions
 
 def start_demo():
     gamemode = "l4d_1-40"
@@ -159,7 +164,18 @@ def catch_results(user_result,current_question,user_results):
 def catch_answer(user_answer,user_answers_list ,current_question):
     user_answers = {}
     user_answers[current_question['id']] = user_answer
-    user_answers_list.append(user_answers)
+
+    key_found = False
+
+    for i, d in enumerate(user_answers_list):
+        if str(current_question['id']) in d:
+            user_answers_list[i] = {current_question['id']: user_answer}
+            key_found = True
+            break
+
+    if not key_found:
+        user_answers_list.append({current_question['id']: user_answer})
+
     return user_answers_list
         
 
