@@ -1,60 +1,39 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
-    <title>Quiz Check Page</title>
-    <!-- Stildefinitionen hier... -->
+    <title>Bildschirmfoto</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Pfad zur CSS-Datei im static-Ordner -->
+    <script>
+        // JavaScript für die Weiterleitung nach 2.5 Sekunden
+        setTimeout(function() {
+            window.location.href = '/quiz';
+        }, 2500);
+    </script>
+    <style>
+        /* Zusätzliche Styles hier, um das Bild zu zentrieren */
+        body, html {
+            height: 100%; /* Volle Höhe des Viewports */
+            margin: 0;
+        }
+        .container {
+            display: flex; /* Flex-Container verwenden */
+            justify-content: center; /* Horizontale Zentrierung */
+            align-items: center; /* Vertikale Zentrierung */
+            height: 100%; /* Volle Höhe des Containers */
+        }
+        img {
+            max-width: 100%; /* Stellt sicher, dass das Bild nicht über den Bildschirm hinausgeht */
+            max-height: 100%; /* Passt die Höhe des Bildes an den Container an */
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Quiz Check Page</h1>
 
-        <!-- Basisverzeichnis und Verzeichnis der Fragen -->
-        {% if base_dir %}
-            <p>Base Directory: {{ base_dir }}</p>
-        {% endif %}
-        {% if directory %}
-            <p>Directory: {{ directory }}</p>
-        {% endif %}
+<div class="container">
+    <!-- Pfad zum Bild im static-Ordner -->
+    <img src="{{ url_for('static', filename='Bildschirmfoto 2024-01-06 um 13.16.30.png') }}" alt="Bildschirmfoto">
+</div>
 
-        <!-- Anzeige der geladenen Fragen -->
-        {% if questions %}
-            <p class="success">{{ questions|length }} Fragen wurden erfolgreich geladen.</p>
-            <h2>Geladene Fragen:</h2>
-            <div>
-                {% for question in questions %}
-                    <div class="question">
-                        <h3>ID: {{ question.id }} - Typ: {{ question.type }}</h3>
-                        <p><strong>Frage:</strong> {{ question.question_text }}</p>
-                        <!-- Hier könnten weitere Details je nach Fragetyp eingefügt werden -->
-                    </div>
-                {% endfor %}
-            </div>
-        {% else %}
-            <p class="error">Keine Fragen geladen.</p>
-        {% endif %}
-
-        <!-- Anzeige von Fehlern beim Laden der Fragen -->
-        {% if errors %}
-            <h2 class="error">Fehler beim Laden einiger Fragen:</h2>
-            <ul>
-                {% for error in errors %}
-                    <li class="error">{{ error }}</li>
-                {% endfor %}
-            </ul>
-        {% else %}
-            <p>Keine Fehler aufgetreten.</p>
-        {% endif %}
-
-        <!-- Button zur Weiterleitung zum Quiz -->
-        <button onclick="redirectToQuiz()">Quiz Starten</button>
-    </div>
-
-    <!-- JavaScript für die Weiterleitung -->
-    <script>
-        function redirectToQuiz() {
-            window.location.href = '/quiz';
-        }
-    </script>
 </body>
 </html>

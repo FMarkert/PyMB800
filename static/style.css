@@ -1,30 +1,34 @@
 /* Grundlegende Stile */
 body {
     font-family: 'Roboto', sans-serif;
-    color: #FFFFFF; /* Weißer Text basierend auf dem Screenshot */
+    color: white; /* Weißer Text basierend auf dem Screenshot */
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background: #0D2C54; /* Dunkelblauer Hintergrund, basierend auf dem Screenshot */
+    background-color: #0D2C54; /* Dunkelblauer Hintergrund, basierend auf dem Screenshot */
 }
 
 h1, h2, h3 {
-    color: #00A6ED; /* Helle blaue Farbe für Überschriften, basierend auf dem Screenshot */
+    color: #FFA800; /* Orange für Überschriften, basierend auf dem Screenshot */
 }
 
 button {
-    background: #FFA800; /* Orangefarbener Button, basierend auf dem Screenshot */
-    color: #FFFFFF;
+    background-color: #FFA800; /* Orangefarbener Button, basierend auf dem Screenshot */
+    color: white;
     border: none;
     border-radius: 5px;
     padding: 10px 20px;
     cursor: pointer;
-    transition: background 0.3s ease;
+    transition: background-color 0.3s ease;
     box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Leichter Schatten für Tiefe */
+    margin-top: 10px; /* Abstand oben */
+    margin-bottom: 10px; /* Abstand unten */
+    margin-right: 10px; /* Abstand rechts */
+    margin-left: 10px; /* Abstand links */
 }
 
 button:hover {
-    background: #CC8400; /* Dunklerer Ton für Hover-Effekt */
+    background-color: #CC8400; /* Dunklerer Ton für Hover-Effekt */
 }
 
 /* Struktur */
@@ -36,8 +40,8 @@ button:hover {
 }
 
 .header, .footer {
-    background: #061539; /* Noch dunklerer Blauton für Kopf-/Fußzeile */
-    color: #FFFFFF;
+    background-color: #061539; /* Noch dunklerer Blauton für Kopf-/Fußzeile */
+    color: white;
     text-align: center;
     padding: 20px 0;
 }
@@ -57,7 +61,7 @@ button:hover {
 .sortable-item {
     background-color: #0F407B; /* Mittelblauer Hintergrund für sortierbare Elemente */
     cursor: pointer;
-    color: #FFFFFF; /* Weißer Text für bessere Lesbarkeit */
+    color: white; /* Weißer Text für bessere Lesbarkeit */
     border: 1px solid #00A6ED; /* Hellblauer Rand für sortierbare Elemente */
     margin-bottom: 8px; /* Erhöhter Abstand */
 }
@@ -74,7 +78,8 @@ button:hover {
     background-color: #0F407B; /* Mittelblauer Hintergrund für Ergebniscontainer */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
     padding: 40px; /* Zusätzlicher Innenabstand */
-    margin: 50px 0; /* Zusätzlicher Außenabstand */
+    margin-top: 50px; /* Zusätzlicher Außenabstand oben */
+    margin-bottom: 50px; /* Zusätzlicher Außenabstand unten */
 }
 
 ul {
