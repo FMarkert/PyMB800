@@ -1,0 +1,622 @@
+Kannst du mir bei meiner Flask App helfen?
+
+import utils
+from flask import Flask, render_template, session, request, redirect, url_for, make_response
+from weasyprint import HTML
+import os
+
+app = Flask(__name__)
+app.secret_key = os.urandom(24)  # Ein zufälliger Schlüssel für Sessions
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+@app.route('/test')
+def test():
+    items = {
+        "Customer Posting Group": "Specific posting group",
+        "Gen. Business Posting Group": "General posting group",
+        # Füge hier weitere Paare hinzu
+    }
+    return render_template('test.html', items=items)
+
+@app.route('/start_demo')
+def demo():
+    questions, errors, user_answers, user_results, user_answers_list = utils.start_demo()
+    questions_origin = questions
+    session['questions'] = questions
+    session['questions_origin'] = questions_origin
+    session['errors'] = errors
+    session['user_answers'] = user_answers
+    session['user_answers_list'] = user_answers_list
+    session['user_results'] = user_results
+
+    return redirect(url_for('checkpage'))
+
+@app.route('/checkpage')
+def checkpage():
+    base_dir = session.get('base_dir')
+    directory = session.get('directory')
+    questions = session.get('questions', [])
+    errors = session.get('errors', [])
+    print(questions)
+    return render_template('check_page.html', base_dir=base_dir, directory=directory, questions=questions, errors=errors)
+
+@app.route('/quiz')
+def quiz():
+    current_question_index = session.get('current_question_index', 0)
+
+    questions = session.get('questions', [])
+
+    if not questions:
+        return redirect(url_for('index'))
+
+    current_question = questions[current_question_index]
+    return render_template('quiz.html', question=current_question, question_index=current_question_index, total_questions=len(questions))
+    
+
+@app.route('/change_question')
+def change_question():
+    direction = request.args.get('direction', 'next')
+    current_question_index = session.get('current_question_index', 0)
+    questions = session.get('questions', [])
+    
+    if direction == 'next':
+        current_question_index = min(current_question_index + 1, len(questions) - 1)
+    elif direction == 'prev':
+        current_question_index = max(current_question_index - 1, 0)
+    
+    session['current_question_index'] = current_question_index
+    return redirect(url_for('quiz'))
+
+@app.route('/end_quiz')
+def end_quiz():
+    
+    session.clear()
+    return redirect(url_for('index'))
+
+@app.route('/submit_answer', methods=['POST'])
+def submit_answer():
+    current_question_index = session.get('current_question_index', 0)
+    questions = session.get('questions', [])
+    user_results = session.get('user_results', [])
+    user_answers_list = session.get('user_answers_list',[])
+
+
+    # Debugging-Ausgaben
+    print(f"Current question index: {current_question_index}")
+    print(f"Number of questions: {len(questions)}")
+
+    # Überprüfung, ob der Index im gültigen Bereich liegt
+    if current_question_index >= len(questions):
+        print("Error: current_question_index is out of range.")
+        return redirect(url_for('index'))
+
+    current_question = questions[current_question_index]
+
+    # Debugging: Ausgabe der POST-Daten
+    print("POST-Daten:", request.form)
+
+    if current_question['type'] == 'drag_drop_order':
+        user_answer = {}
+        user_result = {}
+        ordered_ids = request.form.getlist('order-list')
+        for index, item_id in enumerate(ordered_ids):
+            user_answer[str(index + 1)] = current_question['items'][item_id]
+        user_result[current_question['id']] = utils.check_answer(current_question, user_answer) 
+        user_results = utils.catch_results(user_result,current_question,user_results)
+        user_answers_list = utils.catch_answer(user_answer, user_answers_list, current_question)
+        session['user_results'] = user_results
+        session['user_answers_list'] = user_answers_list
+
+        print(f"User_Answer = {current_question['id']} : {user_answer}")
+        print(f"User_Result = {current_question['id']} : {user_result}")
+        print(f"User_Results = {user_results}")
+
+
+    elif current_question['type'] == 'drag_drop_pairs':
+        user_answer = {}
+        user_result = {}
+        keys_order = request.form.get('keys-order').split(',')
+        values_order = request.form.get('values-order').split(',')
+        for key, value in zip(keys_order, values_order):
+            user_answer[key] = current_question['items'][value]
+        user_result[current_question['id']] = utils.check_answer(current_question, user_answer) 
+        user_results = utils.catch_results(user_result,current_question,user_results)
+        user_answers_list = utils.catch_answer(user_answer, user_answers_list, current_question)
+        session['user_results'] = user_results
+        session['user_answers_list'] = user_answers_list
+        print(f"User_Answer = {current_question['id']} : {user_answer}")
+        print(f"User_Result = {current_question['id']} : {user_result}")
+        print(f"User_Results = {user_results}")
+        
+
+    elif current_question['type'] == 'dropdown':
+        user_result = {}
+        user_answer = request.form.getlist(f'answer_{current_question["id"]}')
+        user_result[current_question['id']] = utils.check_answer(current_question, user_answer)
+        
+        user_results = utils.catch_results(user_result,current_question,user_results)
+        user_answers_list = utils.catch_answer(user_answer, user_answers_list, current_question)
+        session['user_results'] = user_results
+        session['user_answers_list'] = user_answers_list
+        print(f"User_Answer = {current_question['id']} : {user_answer}")
+        print(f"User_Result = {current_question['id']} : {user_result}")
+        print(f"User_Results = {user_results}")
+
+        
+
+    elif current_question['type'] == 'multiple_choice':
+        user_result = {}
+        user_answer = []
+        for key in request.form.keys():
+                user_answer = request.form.getlist(key)
+        print(f"User_Answer = {current_question['id']} : {user_answer}")
+        user_result[current_question['id']] = utils.check_answer(current_question, user_answer)
+        user_results = utils.catch_results(user_result,current_question,user_results)
+        user_answers_list = utils.catch_answer(user_answer, user_answers_list, current_question)
+        session['user_results'] = user_results
+        session['user_answers_list'] = user_answers_list
+        print(f"User_Result = {current_question['id']} : {user_result}")
+        print(f"User_Results = {user_results}")
+
+
+    if current_question_index == len(questions) - 1: #Überprüft und aktualisiert Frageindex 
+            return redirect(url_for('results'))
+    else:
+        session['current_question_index'] = min(current_question_index + 1, len(questions) - 1)
+        return redirect(url_for('quiz'))
+
+
+@app.route('/results')
+def results():
+    user_results = session.get('user_results', [])
+    user_answers_list = session.get('user_answers_list', [])
+    total_questions = len(user_results)
+    correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
+    print(f"user_answers_list = {user_answers_list}")
+
+    # Berechne den Prozentsatz der korrekten Antworten
+    percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+
+    return render_template('results.html', user_results=user_results, 
+                           total_questions=total_questions, 
+                           correct_answers=correct_answers,
+                           percentage_correct=percentage_correct)
+
+@app.route('/generate_pdf')
+def generate_pdf():
+    questions_origin = session.get('questions_origin', [])
+    user_results = session.get('user_results', [])
+    user_answers_list = session.get('user_answers_list', [])
+
+    print_list = utils.generate_print_data(questions_origin,user_answers_list)
+
+    total_questions = len(user_results)
+    correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
+    percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+    html_template = render_template('pdf_template.html', questions_origin=questions_origin, user_results=user_results, user_answers_list=user_answers_list, total_questions =total_questions, percentage_correct=percentage_correct, print_list = print_list)
+
+    # Erstellen eines PDFs aus HTML
+    pdf = HTML(string=html_template).write_pdf()
+
+    # Erstellen einer Antwort und Senden des PDFs
+    response = make_response(pdf)
+    response.headers['Content-Type'] = 'application/pdf'
+    response.headers['Content-Disposition'] = 'attachment; filename=quiz_details.pdf'
+
+    return response
+
+
+
+if __name__ == '__main__':
+    app.run(debug=True)
+
+das sind meine utils:
+
+import os
+import json
+import random
+import models
+
+
+def gamemode_directory(gamemode):
+    
+    base_dir = os.path.abspath(os.path.dirname(__file__))
+
+ 
+    if gamemode == "l4d_1-40":   # Deine Spielmodi-Logik
+        mode_directory = ['l4d', '1-40']
+    elif gamemode == "l4d_41-80":
+        mode_directory = ['l4d', '41-80']
+    elif gamemode == "l4d_81-136":
+        mode_directory = ['l4d', '81-136']
+    elif gamemode == "l4d_complete":
+        print("not available yet") # Wird im späteren Verlauf integriert   
+        return None
+    elif gamemode == "xt":
+        mode_directory = ["xt"]
+    else:
+        print("Error: Mode not found")
+        return None
+
+    # Baue den Pfad basierend auf dem gewählten Spielmodus
+    mode_path = os.path.join(base_dir, "data", "questions", *mode_directory)
+
+    # Überprüfe, ob das Verzeichnis existiert
+    if not os.path.isdir(mode_path):
+        print(f"Verzeichnis für Spielmodus '{gamemode}' existiert nicht: {mode_path}")
+        return None
+    return mode_path
+
+
+# Es wird noch eine Funktion benötigt, die je nach Gamemode einen Fragenpool aus mehreren Verzeichnissen bildet
+
+def json_to_object(directory):
+    questions = []
+    errors = []
+    for filename in os.listdir(directory):
+        if filename.endswith(".json"):
+            filepath = os.path.join(directory, filename)
+            try:
+                with open(filepath, 'r') as file:
+                    data = json.load(file)
+
+                    if data['type'] == 'drag_drop_order':
+                        question = models.Drag_Drop_Order(
+                            id=data['id'],
+                            question_text=data['question_text'],
+                            src=data['src'],
+                            type=data['type'],  # Hinzufügen des fehlenden Parameters
+                            comment=data.get('comment', ''),
+                            casestudy=data.get('casestudy', ''),
+                            items=data['items'],
+                        )
+                    elif data['type'] == 'drag_drop_pairs':
+                        question = models.Drag_Drop_Pairs(
+                            id=data['id'],
+                            question_text=data['question_text'],
+                            src=data['src'],
+                            type=data['type'],  # Hinzufügen des fehlenden Parameters
+                            comment=data.get('comment', ''),
+                            casestudy=data.get('casestudy', ''),
+                            items=data['items']
+                        )
+                    elif data['type'] == 'dropdown':
+                        question = models.Dropdown(
+                            id=data['id'],
+                            question_text=data['question_text'],
+                            src=data['src'],
+                            type=data['type'],  # Hinzufügen des fehlenden Parameters
+                            comment=data.get('comment', ''),
+                            casestudy=data.get('casestudy', ''),
+                            items=data['items'],
+                            correct_answer=data['correct_answer']
+                        )
+                    elif data['type'] == 'multiple_choice':
+                        question = models.Multiple_Choice(
+                            id=data['id'],
+                            question_text=data['question_text'],
+                            src=data['src'],
+                            type=data['type'],  # Hinzufügen des fehlenden Parameters
+                            comment=data.get('comment', ''),
+                            casestudy=data.get('casestudy', ''),
+                            items=data['items'],
+                            correct_answer=data['correct_answer']
+                        )
+                    else:
+                        print(f"Unbekannter Fragetyp: {data['type']} in Datei {filename}")
+                        continue
+
+                    question_dict = object_to_dict(question)
+                    questions.append(question_dict)
+            except Exception as e:
+                error_message = f"Fehler beim Laden der Frage aus {filename}: {e}"
+                errors.append(error_message)
+    return questions, errors                  
+
+
+
+def shuffle_questionpool(questions): # Die Liste mit Fragen wird durchgemischt 
+    random.shuffle(questions)
+
+def start_demo():
+    gamemode = "l4d_1-40"
+    directory = gamemode_directory(gamemode)
+    questions, errors = json_to_object(directory)
+    user_answers = {}
+    user_answers_list = []
+    user_results = []
+    return questions, errors, user_answers, user_results, user_answers_list
+
+def object_to_dict(obj):
+    if obj.type == 'drag_drop_pairs' or obj.type == 'drag_drop_order':
+        return {
+            'id': obj.id,
+            'question_text': obj.question_text,
+            'src': obj.src,
+            'type': obj.type,
+            'comment': obj.comment,
+            'casestudy': obj.casestudy,
+            'items': obj.items
+        }
+    else:
+        return {
+            'id': obj.id,
+            'question_text': obj.question_text,
+            'src': obj.src,
+            'type': obj.type,
+            'comment': obj.comment,
+            'casestudy': obj.casestudy,
+            'items': obj.items,
+            'correct_answer': obj.correct_answer
+        }
+
+def check_answer(current_question, user_answer):
+    if current_question['type'] == 'drag_drop_order' or current_question['type'] == 'drag_drop_pairs':
+        user_result = user_answer == current_question['items']
+    else:
+        user_result = user_answer == current_question['correct_answer']
+    return user_result
+
+def catch_results(user_result,current_question,user_results):
+    key_found = False
+
+    for i, d in enumerate(user_results):
+        if str(current_question['id']) in d:
+            user_results[i] = user_result
+            key_found = True
+            break
+    if not key_found:
+        user_results.append(user_result)
+
+    return user_results
+
+def catch_answer(user_answer,user_answers_list ,current_question):
+    user_answers = {}
+    user_answers[current_question['id']] = user_answer
+    user_answers_list.append(user_answers)
+    return user_answers_list
+        
+
+def generate_print_data(questions_origin,user_answers_list):
+
+    print_list = []
+    questions = questions_origin
+        
+    for question in questions:
+            if question.get('type') == 'dropdown':  # Relevante Daten für Fragetyp Dropdown
+                id = question.get('id')
+                question_type = question.get('type')
+                question_text = question.get('question_text')
+                items_raw = question.get('items') # Dictionary - Schlüssel sind Nummerierung und Werte sind Dictionary mit Textteil der Antwort und den optionen
+                items = []
+                for i in items_raw:
+                    item = items_raw[i]
+                    items.append(item)    
+                correct_answer = question.get('correct_answer')
+                user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
+                print_unit = [question_type, id, question_text, items, correct_answer, user_answer]
+                print(print_unit)
+                print_list.append(print_unit)            
+
+                #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
+                # Item i, options, correct_answer i, user_answer i
+
+            elif question.get('type') == 'multiple_choice':
+                id = question.get('id')
+                question_type = question.get('type')
+
+                question_text = question.get('question_text')
+                items = question.get('items') # Dictionary mit Aufzählung (A-Z) als Schlüssel und den Antwortmöglichkeiten als Werten
+
+                correct_answer = question.get('correct_answer') # Liste mit den Schlüsseln der korrekten Antworten
+                user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
+                print_unit = [question_type, id, question_text, items, correct_answer, user_answer]
+                print_list.append(print_unit)
+                #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
+                # Werte aus items_raw aufgelistet untereinander mit den Schlüsseln als Aufzählungszeichen, dann correct_answer, dann user_answer
+            
+            elif question.get('type') == 'drag_drop_order':
+                id = question.get('id')
+                question_type = question.get('type')
+                question_text = question.get('question_text')
+                items = question.get('items') # Dictionary mit Zahlen als String, die die Reihenfolge darstellen sollen als Schlüssel und der jeweiligen Antwort als Schlüssel
+                user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
+                print_unit = [question_type, id, question_text, items, user_answer]
+                print_list.append(print_unit)
+            
+                
+                #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
+                # Werte aus items_raw aufgelistet untereinander mit den Schlüsseln als Aufzählungszeichen stellt die richtige Antwort da, danach user_answer in gleicher Form darstellen
+            
+            elif question.get('type') == 'drag_drop_pairs':
+                id = question.get('id')
+                question_type = question.get('type')
+                question_text = question.get('question_text')
+                items = question.get('items') # Dictionary: Schlüssel und Wert geben immer ein Paar
+                user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
+                print_unit = [question_type, id, question_text, items, user_answer]
+                print_list.append(print_unit)
+
+                #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
+                #Schlüssel und Werte aus items_raw sollen jeweils in einer eingenen Zeile aufgelistet untereinenderstehen, danach soll user_answer im gleichen Stil angezeigt werden
+    
+    return print_list
+
+Das ist meine results.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Ergebnisse</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .results-container {
+            width: 80%;
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f8f8f8;
+        }
+        ul {
+            list-style-type: none;
+            padding: 0;
+        }
+        .buttons {
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="results-container">
+        <h1>Deine Ergebnisse</h1>
+        <p>Du hast {{ correct_answers }} von {{ total_questions }} Fragen richtig beantwortet.</p>
+        <p>Das entspricht {{ percentage_correct }}%.</p>
+
+        {% if percentage_correct >= 95 %}
+            <p>Herzlichen Glückwunsch! Du hast hervorragende Leistungen gezeigt!</p>
+        {% elif 80 <= percentage_correct < 95 %}
+            <p>Gut gemacht! Du bist fast da. Übe weiter, um 95% zu erreichen!</p>
+        {% else %}
+            <p>Mach dir keine Sorgen! Übung macht den Meister. Versuche es weiter!</p>
+        {% endif %}
+
+        <ul>
+            {% for result in user_results %}
+                {% for question_id, is_correct in result.items() %}
+                    <li>Frage {{ question_id }}: <strong>{{ 'Richtig' if is_correct else 'Falsch' }}</strong></li>
+                {% endfor %}
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="buttons">
+        <button onclick="location.href='/generate_pdf'">Details als PDF</button>
+        <button onclick="location.href='/end_quiz'">Quiz Beenden</button>
+    </div>
+</body>
+</html>
+
+und das mein pdf_template.html:
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Quiz Details</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            text-align: center;
+        }
+        .question-container {
+            margin: 20px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 20px;
+        }
+        .question-title {
+            font-weight: bold;
+        }
+        .answer-section {
+            text-align: left;
+            margin: 10px 0;
+        }
+        .correct-answer, .user-answer {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="results-container">
+        <h1>Deine Ergebnisse</h1>
+        <p>Du hast {{ correct_answers }} von {{ total_questions }} Fragen richtig beantwortet.</p>
+        <p>Das entspricht {{ percentage_correct }}%.</p>
+        {% if percentage_correct >= 95 %}
+            <p>Herzlichen Glückwunsch! Du hast hervorragende Leistungen gezeigt!</p>
+        {% elif 80 <= percentage_correct < 95 %}
+            <p>Gut gemacht! Du bist fast da. Übe weiter, um 95% zu erreichen!</p>
+        {% else %}
+            <p>Mach dir keine Sorgen! Übung macht den Meister. Versuche es weiter!</p>
+        {% endif %}
+    </div>
+
+    {% for question in questions %}
+        {% set user_answer = user_answers_list | selectattr('id', 'equalto', question.id) | list | first %}
+        <div class="question-container">
+            <div class="question-title">{{ question.question_text }}</div>
+            <div class="answer-section">
+                <div class="correct-answer">Richtige Antwort: {{ question.correct_answer if question.correct_answer else question.items }}</div>
+                <div class="user-answer">Deine Antwort: {{ user_answer }}</div>
+            </div>
+        </div>
+    {% endfor %}
+</body>
+</html>
+
+
+Meine Idee wäre, auf der letzten Quiz-Seite die Möglichkeit zu haben, eine PDF zu Drucken in der die beantworteten Fragen mit Index und ID aufgeführt sind. Unter der Frage soll jeweils die richtige Lösung und die Antwort des Nutzers gegenüber gestellt werden. Die Informationen, die der Nutzer auf results.html über das Gesamtergebnis des Quiz erhält sollen ebenfalls am Anfang der PDF zu finden sein. Dafür würde ich gerne WeasyPrint nutzen. 
+
+Kannst du mir dabei bitte helfen? 
+
+der PDF soll die Liste print_list übergeben. Jedes Element in der Liste ist Wiederrum eine Liste, die eine Frage darstellt, die wir als print_unit bezeichnen. Mit print_list[i] kann also auf die einzelnen Fragen(print_units)  zugegriffen werden. Es gibt 2 Möglichkeiten, wie die print_units aufgebaut sein können. Für die Fragetypen dropdown und multiple_choice ist die print_unit so aufgebaut:
+
+print_unit = [question_type, id, question_text, items, correct_answer, user_answer]
+
+Für die Fragentypen drag_drop_order und drag_drop_pairs ist eine print_unit so aufgebaut:
+
+[question_type, id, question_text, items, user_answer]
+
+Unabhängig vom Fragetyp sollen die Fragen in der PDF nummeriert werden, und nach der Nummer soll erst die Fragen id und dann der question_text angezeigt werden.
+
+print_list[I][0] stellt immer den question_type dar. Je nach question_type soll die pdf wie folgt gedruckt werden:
+
+dropdown:
+
+items für den Fragetyp dropdown ist eine Liste mit Dictionarys und ist ungefähr so aufgebaut:
+[{'options': ['View the Location Code for available inventory',
+     'View the Item Availability by Periods',
+     'Check the Catalog on the Sales Line Details'],
+    'text': 'Deliver on a specific customer date '},
+   {'options': ['Choose Make Invoice',
+     'Choose Copy Document',
+     'Choose Make Order'],
+    'text': 'Deliver on a specific customer date '}]
+
+Nach dem question_text sollen erst text aus dem Dictionary gedrucht werden, dann options und darunter die erste user_answer für diese Frage.
+Das soll nacheinander für jedes Dictionary passieren.
+
+multiple_choice:
+
+Nach dem question_text sollen Werte aus items_raw aufgelistet untereinander mit den Schlüsseln als Aufzählungszeichen aufgelistet werden, dann correct_answer, dann user_answer
+
+drag_drop_order:
+
+Werte aus items_raw aufgelistet untereinander mit den Schlüsseln als Aufzählungszeichen stellt die richtige Antwort da, danach user_answer in gleicher Form darstellen
+
+drag_drop_pairs:
+
+Schlüssel und Werte aus items_raw sollen jeweils in einer eingenen Zeile aufgelistet untereinenderstehen, danach soll user_answer im gleichen Stil angezeigt werden
+
+
+Ist das verständlich und realiserbar?

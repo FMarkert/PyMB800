@@ -194,7 +194,7 @@ def generate_pdf():
     total_questions = len(user_results)
     correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
     percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
-    html_template = render_template('pdf_template.html', questions=questions, user_results=user_results, user_answers_list=user_answers_list, total_questions =total_questions, percentage_correct=percentage_correct)
+    html_template = render_template('pdf_template.html', questions_origin=questions_origin, user_results=user_results, user_answers_list=user_answers_list, total_questions =total_questions, percentage_correct=percentage_correct, print_list = print_list)
 
     # Erstellen eines PDFs aus HTML
     pdf = HTML(string=html_template).write_pdf()

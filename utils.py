@@ -169,14 +169,18 @@ def generate_print_data(questions_origin,user_answers_list):
     questions = questions_origin
         
     for question in questions:
-            if question.get('type  ') == 'dropdown':  # Relevante Daten für Fragetyp Dropdown
+            if question.get('type') == 'dropdown':  # Relevante Daten für Fragetyp Dropdown
                 id = question.get('id')
                 question_type = question.get('type')
                 question_text = question.get('question_text')
                 items_raw = question.get('items') # Dictionary - Schlüssel sind Nummerierung und Werte sind Dictionary mit Textteil der Antwort und den optionen
+                items = []
+                for i in items_raw:
+                    item = items_raw[i]
+                    items.append(item)    
                 correct_answer = question.get('correct_answer')
                 user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
-                print_unit = [question_type, id, question_text, items_raw, correct_answer, user_answer]
+                print_unit = [question_type, id, question_text, items, correct_answer, user_answer]
                 print(print_unit)
                 print_list.append(print_unit)            
 
@@ -188,10 +192,11 @@ def generate_print_data(questions_origin,user_answers_list):
                 question_type = question.get('type')
 
                 question_text = question.get('question_text')
-                items_raw = question.get('items') # Dictionary mit Aufzählung (A-Z) als Schlüssel und den Antwortmöglichkeiten als Werten
+                items = question.get('items') # Dictionary mit Aufzählung (A-Z) als Schlüssel und den Antwortmöglichkeiten als Werten
+
                 correct_answer = question.get('correct_answer') # Liste mit den Schlüsseln der korrekten Antworten
                 user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
-                print_unit = [question_type, id, question_text, items_raw, correct_answer, user_answer]
+                print_unit = [question_type, id, question_text, items, correct_answer, user_answer]
                 print_list.append(print_unit)
                 #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
                 # Werte aus items_raw aufgelistet untereinander mit den Schlüsseln als Aufzählungszeichen, dann correct_answer, dann user_answer
@@ -200,9 +205,9 @@ def generate_print_data(questions_origin,user_answers_list):
                 id = question.get('id')
                 question_type = question.get('type')
                 question_text = question.get('question_text')
-                items_raw = question.get('items') # Dictionary mit Zahlen als String, die die Reihenfolge darstellen sollen als Schlüssel und der jeweiligen Antwort als Schlüssel
+                items = question.get('items') # Dictionary mit Zahlen als String, die die Reihenfolge darstellen sollen als Schlüssel und der jeweiligen Antwort als Schlüssel
                 user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
-                print_unit = [question_type, id, question_text, items_raw, user_answer]
+                print_unit = [question_type, id, question_text, items, user_answer]
                 print_list.append(print_unit)
             
                 
@@ -213,9 +218,9 @@ def generate_print_data(questions_origin,user_answers_list):
                 id = question.get('id')
                 question_type = question.get('type')
                 question_text = question.get('question_text')
-                items_raw = question.get('items') # Dictionary: Schlüssel und Wert geben immer ein Paar
+                items = question.get('items') # Dictionary: Schlüssel und Wert geben immer ein Paar
                 user_answer = [answer[str(id)] for answer in user_answers_list if str(id) in answer][0]
-                print_unit = [question_type, id, question_text, items_raw, user_answer]
+                print_unit = [question_type, id, question_text, items, user_answer]
                 print_list.append(print_unit)
 
                 #Anzeige in pdf: Nach der id soll der question_text angezeigt werden, danach der Block mit den Antworten, der für jede Frage so aussehen soll:
