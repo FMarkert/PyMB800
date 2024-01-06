@@ -1,0 +1,94 @@
+/* Grundlegende Stile */
+body {
+    font-family: 'Roboto', sans-serif;
+    color: #FFFFFF; /* Weißer Text basierend auf dem Screenshot */
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background: #0D2C54; /* Dunkelblauer Hintergrund, basierend auf dem Screenshot */
+}
+
+h1, h2, h3 {
+    color: #00A6ED; /* Helle blaue Farbe für Überschriften, basierend auf dem Screenshot */
+}
+
+button {
+    background: #FFA800; /* Orangefarbener Button, basierend auf dem Screenshot */
+    color: #FFFFFF;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Leichter Schatten für Tiefe */
+}
+
+button:hover {
+    background: #CC8400; /* Dunklerer Ton für Hover-Effekt */
+}
+
+/* Struktur */
+.container {
+    width: 80%;
+    margin: 20px auto;
+    overflow: hidden;
+    text-align: center; /* Zentriert den Inhalt */
+}
+
+.header, .footer {
+    background: #061539; /* Noch dunklerer Blauton für Kopf-/Fußzeile */
+    color: #FFFFFF;
+    text-align: center;
+    padding: 20px 0;
+}
+
+/* Spezifische Seitenstile */
+/* Index */
+.index-button {
+    margin-top: 50px;
+    margin-bottom: 50px; /* Anpassung für Abstand oben und unten */
+}
+
+/* Quiz */
+.sortable-list {
+    border: 2px dashed #00A6ED; /* Hellblauer Rand für Sortierlisten */
+}
+
+.sortable-item {
+    background-color: #0F407B; /* Mittelblauer Hintergrund für sortierbare Elemente */
+    cursor: pointer;
+    color: #FFFFFF; /* Weißer Text für bessere Lesbarkeit */
+    border: 1px solid #00A6ED; /* Hellblauer Rand für sortierbare Elemente */
+    margin-bottom: 8px; /* Erhöhter Abstand */
+}
+
+.pairs-container {
+    display: flex;
+    justify-content: center; /* Zentriert die Spalten */
+    gap: 20px; /* Fügt Platz zwischen den Spalten hinzu */
+}
+
+/* Ergebnisse */
+.results-container {
+    border-radius: 10px;
+    background-color: #0F407B; /* Mittelblauer Hintergrund für Ergebniscontainer */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
+    padding: 40px; /* Zusätzlicher Innenabstand */
+    margin: 50px 0; /* Zusätzlicher Außenabstand */
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+    }
+
+    .pairs-container {
+        flex-direction: column;
+    }
+}

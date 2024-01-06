@@ -3,16 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <title>PyMB800</title>
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            text-align: center;
-            margin-top: 100px;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>PyMB800</h1>
-    <button onclick="window.location.href='/start_demo'">START DEMO</button>
+    <div class="container">
+        <header class="header">
+            <h1>PyMB800</h1>
+        </header>
+
+        <button class="index-button" onclick="window.location.href='/start_demo'">START DEMO</button>
+
+        <footer class="footer">
+            © 2024 PyMB800
+        </footer>
+    </div>
+
+    <script>
+        // Hier können JavaScript-Scripts eingefügt werden, falls benötigt
+    </script>
 </body>
 </html>

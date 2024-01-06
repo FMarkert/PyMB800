@@ -119,9 +119,7 @@ def submit_answer():
         user_answer = {}
         user_result = {}
         keys_order = request.form.get('keys-order').split(',')
-      
         values_order = request.form.get('values-order').split(',')
-        print(f"values_order: {values_order}")
         for key, value in zip(keys_order, values_order):
             user_answer[key] = current_question['items'][value]
         user_result[current_question['id']] = utils.check_answer(current_question, user_answer) 
