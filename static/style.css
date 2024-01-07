@@ -1,47 +1,47 @@
 /* Grundlegende Stile */
 body {
-    font-family: 'Roboto', sans-serif;
-    color: white; /* Weißer Text basierend auf dem Screenshot */
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    color: #333; /* Dunkelgrauer Text */
     line-height: 1.6;
     margin: 0;
     padding: 0;
-    background-color: #0D2C54; /* Dunkelblauer Hintergrund, basierend auf dem Screenshot */
+    background-color: #f8f8f8; /* Heller Hintergrund */
 }
 
 h1, h2, h3 {
-    color: #FFA800; /* Orange für Überschriften, basierend auf dem Screenshot */
+    color: #1a1a1a; /* Fast Schwarz für Überschriften */
 }
 
 button {
-    background-color: #FFA800; /* Orangefarbener Button, basierend auf dem Screenshot */
+    background-color: #1a1a1a; /* Dunkelgrauer Button */
     color: white;
     border: none;
-    border-radius: 5px;
-    padding: 10px 20px;
+    border-radius: 20px; /* Abgerundete Ecken */
+    padding: 15px 30px; /* Größeres Padding */
     cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Leichter Schatten für Tiefe */
-    margin-top: 10px; /* Abstand oben */
-    margin-bottom: 10px; /* Abstand unten */
-    margin-right: 10px; /* Abstand rechts */
-    margin-left: 10px; /* Abstand links */
+    transition: background-color 0.3s ease, transform 0.2s ease; /* Weiche Übergänge */
+    box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2); /* Leichter Schatten */
+    font-size: 16px; /* Größere Schrift */
+    font-weight: bold; /* Fettschrift */
 }
 
 button:hover {
-    background-color: #CC8400; /* Dunklerer Ton für Hover-Effekt */
+    background-color: #333; /* Leicht heller für Hover-Effekt */
+    transform: translateY(-2px); /* Leichtes Anheben beim Hover */
 }
 
 /* Struktur */
 .container {
-    width: 80%;
-    margin: 20px auto;
-    overflow: hidden;
+    width: 90%;
+    max-width: 1200px; /* Begrenzt die maximale Breite */
+    margin: 40px auto;
+    padding: 20px;
     text-align: center; /* Zentriert den Inhalt */
 }
 
 .header, .footer {
-    background-color: #061539; /* Noch dunklerer Blauton für Kopf-/Fußzeile */
-    color: white;
+    background-color: #fff; /* Weißer Hintergrund für Kopf-/Fußzeile */
+    color: #333;
     text-align: center;
     padding: 20px 0;
 }
@@ -55,15 +55,18 @@ button:hover {
 
 /* Quiz */
 .sortable-list {
-    border: 2px dashed #00A6ED; /* Hellblauer Rand für Sortierlisten */
+    border: 0.05px solid #B0B0B0; /* Solider Grauer Rand für Sortierlisten */
+    border-radius: 10px; /* Abgerundete Ecken für die Liste */
 }
 
 .sortable-item {
-    background-color: #0F407B; /* Mittelblauer Hintergrund für sortierbare Elemente */
+    background-color: #E0E0E0; /* Helles Grau für sortierbare Elemente */
     cursor: pointer;
-    color: white; /* Weißer Text für bessere Lesbarkeit */
-    border: 1px solid #00A6ED; /* Hellblauer Rand für sortierbare Elemente */
+    color: #333; /* Dunkelgrauer Text für bessere Lesbarkeit */
+    border: 1px solid #B0B0B0; /* Grauer Rand für sortierbare Elemente */
+    border-radius: 10px; /* Abgerundete Ecken für die Elemente */
     margin-bottom: 8px; /* Erhöhter Abstand */
+    padding: 10px; /* Padding für Inhalt */
 }
 
 .pairs-container {
@@ -72,10 +75,11 @@ button:hover {
     gap: 20px; /* Fügt Platz zwischen den Spalten hinzu */
 }
 
+
 /* Ergebnisse */
 .results-container {
     border-radius: 10px;
-    background-color: #0F407B; /* Mittelblauer Hintergrund für Ergebniscontainer */
+    background-color: #E0E0E0; /* Helles Grau für Ergebniscontainer */
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Schatten für Tiefe */
     padding: 40px; /* Zusätzlicher Innenabstand */
     margin-top: 50px; /* Zusätzlicher Außenabstand oben */

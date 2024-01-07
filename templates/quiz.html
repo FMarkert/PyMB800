@@ -12,13 +12,12 @@
             <h1>Quiz</h1>
         </header>
 
-
         <form action="/submit_answer" method="post">
-            <div class="question">
+            <div class="question" style="margin-top: 30px;">
                 <h2>Frage {{ question_index + 1 }} von {{ total_questions }}</h2>
                 <p>{{ question.question_text }}</p>
 
-                <div class="answers">
+                <div class="answers" style="margin-top: 20px;">
                     <!-- Drag & Drop-Paar-Fragen -->
                     {% if question.type == 'drag_drop_pairs' %}
                         <div class="pairs-container">
@@ -80,12 +79,12 @@
                 </div>
             </div>
 
-            <div class="buttons">
+            <div class="buttons" style="margin-top: 30px;">
                 <button type="submit" onclick="return validateMultipleChoice()">Antworten senden</button>
             </div>
         </form>
 
-        <div class="buttons">
+        <div class="buttons" style="margin-top: 20px;">
             <button onclick="location.href='/change_question?direction=prev'">Vorherige Frage</button>
             <button onclick="location.href='/change_question?direction=next'">Nächste Frage</button>
             <button onclick="confirmExit()">Quiz Beenden</button>

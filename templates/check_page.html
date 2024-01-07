@@ -5,16 +5,26 @@
     <title>Bildschirmfoto</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}"> <!-- Pfad zur CSS-Datei im static-Ordner -->
     <script>
-        // JavaScript für die Weiterleitung nach 2.5 Sekunden
+        // JavaScript für die Weiterleitung nach 2 Sekunden
         setTimeout(function() {
             window.location.href = '/quiz';
-        }, 2500);
+        }, 2000);
+
+        // Funktion, um das Bild und den Sound nach 1 Sekunde anzuzeigen bzw. abzuspielen
+        function showImageAndPlaySound() {
+            document.getElementById('logo').style.display = 'block';
+            document.getElementById('startupSound').play();
+        }
+
+        // Verzögert das Anzeigen des Bildes und das Abspielen des Sounds
+        setTimeout(showImageAndPlaySound, 1000);
     </script>
     <style>
         /* Zusätzliche Styles hier, um das Bild zu zentrieren */
         body, html {
             height: 100%; /* Volle Höhe des Viewports */
             margin: 0;
+            background-color: black; /* Schwarzer Hintergrund */
         }
         .container {
             display: flex; /* Flex-Container verwenden */
@@ -23,17 +33,23 @@
             height: 100%; /* Volle Höhe des Containers */
         }
         img {
-            max-width: 100%; /* Stellt sicher, dass das Bild nicht über den Bildschirm hinausgeht */
-            max-height: 100%; /* Passt die Höhe des Bildes an den Container an */
-        }
-    </style>
+        max-width: 100%; /* Stellt sicher, dass das Bild nicht über den Bildschirm hinausgeht */
+        max-height: 100%; /* Passt die Höhe des Bildes an den Container an */
+        display: none; /* Das Bild ist zunächst nicht sichtbar */
+        width: 50%; /* Setzt die Breite des Bildes auf 50% seiner ursprünglichen Größe */
+        height: auto; /* Passt die Höhe proportional zur Breite an */
+    }
+</style>
 </head>
 <body>
 
 <div class="container">
     <!-- Pfad zum Bild im static-Ordner -->
-    <img src="{{ url_for('static', filename='Bildschirmfoto 2024-01-06 um 13.16.30.png') }}" alt="Bildschirmfoto">
+    <img src="{{ url_for('static', filename='logo.png') }}" alt="Bildschirmfoto" id="logo">
 </div>
+
+<!-- Audio-Element für den Sound -->
+<audio id="startupSound" src="{{ url_for('static', filename='Startup.wav') }}"></audio>
 
 </body>
 </html>

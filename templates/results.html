@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
 <head>
     <meta charset="UTF-8">
     <title>Quiz Ergebnisse</title>
@@ -11,7 +11,7 @@
             <h1>Deine Ergebnisse</h1>
         </header>
 
-        <div class="results-container">
+        <div class="results-container" style="margin-top: 50px; margin-bottom: 50px;">
             <p>Du hast {{ correct_answers }} von {{ total_questions }} Fragen richtig beantwortet.</p>
             <p>Das entspricht {{ percentage_correct }}%.</p>
 
@@ -32,7 +32,7 @@
             </ul>
         </div>
 
-        <div class="buttons">
+        <div class="buttons" style="margin-top: 20px;">
             <button onclick="location.href='/generate_pdf'">Details als PDF</button>
             <button onclick="location.href='/end_quiz'">Quiz Beenden</button>
         </div>
