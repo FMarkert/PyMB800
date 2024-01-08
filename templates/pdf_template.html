@@ -3,69 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>Quiz Details</title>
-    <link rel="stylesheet" href="style.css"> <!-- Verweis auf die externe CSS-Datei -->
+    <link rel="stylesheet" href="style.css">
     <style>
         body {
-            font-family: 'Roboto', sans-serif;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             color: #333;
             line-height: 1.6;
             margin: 0;
-            padding: 20px;
-            text-align: justify;
-            background-color: #f9f9f9; /* Hintergrundfarbe hinzufügen */
+            padding: 0;
+            background-color: #f8f8f8;
         }
 
         h1, h2, h3 {
-            color: #0056b3; /* Farbe der Überschriften anpassen */
-            margin-top: 1em;
-            margin-bottom: 0.5em;
+            color: #1a1a1a;
         }
 
-        .header {
+        .header, .footer {
+            background-color: #fff;
+            color: #333;
             text-align: center;
             padding: 20px 0;
-            border-bottom: 3px solid #0056b3; /* Farbe der Linie anpassen */
-            background-color: #e6f0ff; /* Hintergrundfarbe für den Header-Bereich */
-            margin-bottom: 30px;
+        }
+
+        .results-container {
+            border-radius: 10px;
+            background-color: #E0E0E0;
+            box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+            padding: 40px;
+            margin-top: 50px;
+            margin-bottom: 50px;
+            text-align: center;
         }
 
         .question-container {
-            background-color: white; /* Hintergrundfarbe für Fragen */
+            background-color: white;
             margin: 20px auto;
             width: 80%;
-            border: 1px solid #ccc; /* Rahmen hinzufügen */
+            border: 1px solid #ccc;
             padding: 20px;
-            box-shadow: 0px 0px 10px rgba(0,0,0,0.1); /* Schatten für Tiefe */
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+            page-break-after: always;
         }
 
         .question-title {
             font-weight: bold;
             font-size: 1.2em;
-            color: #333; /* Farbe für Frage-Titel */
+            color: #333;
         }
 
         .answer-section {
             margin: 20px 0;
             padding: 10px;
-            border-left: 4px solid #0056b3; /* Linie links für Antwort-Bereich */
+            border-left: 4px solid #070808;
+            text-align: left;
         }
 
         .correct-answer, .user-answer {
             margin: 5px 0;
-            padding-left: 20px;
-            font-style: italic; /* Stil für Antworten */
-        }
-
-        .results-container {
-            text-align: center;
-            margin-bottom: 30px;
-            padding: 10px;
-            background-color: #e6f0ff; /* Hintergrundfarbe für Ergebnisbereich */
-            border-radius: 5px; /* Abgerundete Ecken */
+            padding-left: 0px;
+            font-style: italic;
         }
 
         ul {
-            padding-left: 40px;
+            list-style-type: none;
+            padding: 0;
+        }
+
+        @media (max-width: 768px) {
+            .question-container {
+                width: 95%;
+            }
         }
 
     </style>
@@ -93,28 +100,27 @@
             <p>{{ question[2] }}</p>
             <div class="answer-section">
                 {% if question[0] == 'dropdown' %}
-                    <!-- Dropdown-Fragen -->
+                    <div>Antwortmöglichkeiten:</div><br> <!-- Zusätzlicher Text mit Leerzeile -->
                     {% for item in question[3] %}
-                        <div>{{ item['text'] }}</div>
+                        <div>{{ item['text'] }}:</div>
                         <ul>
                             {% for option in item['options'] %}
                                 <li>{{ option }}</li>
                             {% endfor %}
                         </ul>
                     {% endfor %}
-                    <div class="correct-answer">Richtige Antwort: 
+                    <div class="correct-answer">Richtige Antwort:
                         {% for ans in question[4] %}
                             <div>{{ ans }}</div>
                         {% endfor %}
                     </div>
-                    <div class="user-answer">Deine Antwort: 
+                    <div class="user-answer">Deine Antwort:
                         {% for ans in question[5] %}
                             <div>{{ ans }}</div>
                         {% endfor %}
                     </div>
-
                 {% elif question[0] == 'multiple_choice' %}
-                    <!-- Multiple-Choice-Fragen -->
+                    <div>Antwortmöglichkeiten:</div><br> <!-- Zusätzlicher Text mit Leerzeile -->
                     <ul>
                         {% for key, value in question[3].items() %}
                             <li>{{ key }}: {{ value }}</li>
@@ -122,18 +128,16 @@
                     </ul>
                     <div class="correct-answer">Richtige Antwort(en): {{ question[4] | join(', ') }}</div>
                     <div class="user-answer">Deine Antwort(en): {{ question[5] | join(', ') }}</div>
-
                 {% elif question[0] == 'drag_drop_order' %}
-                    <!-- Drag-Drop-Order-Fragen -->
+                    <div>Richtige Reihenfolge:</div><br> <!-- Zusätzlicher Text mit Leerzeile -->
                     <ul>
                         {% for key, value in question[3].items() %}
                             <li>{{ key }}: {{ value }}</li>
                         {% endfor %}
                     </ul>
                     <div class="user-answer">Deine geordnete Antwort: {{ question[4] | join(', ') }}</div>
-
                 {% elif question[0] == 'drag_drop_pairs' %}
-                    <!-- Drag-Drop-Pairs-Fragen -->
+                    <div>Richtige Paare:</div><br> <!-- Zusätzlicher Text mit Leerzeile -->
                     {% for key, value in question[3].items() %}
                         <div>{{ key }} - {{ value }}</div>
                     {% endfor %}
