@@ -179,6 +179,7 @@ def results():
 
         # Berechne den Prozentsatz der korrekten Antworten
     percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+    percentage_correct = round(percentage_correct,2)
 
     session['total_questions'] = total_questions
     session['correct_answers'] = correct_answers

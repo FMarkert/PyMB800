@@ -1,0 +1,15 @@
+{
+    "id":"x",
+    "src":"xt",
+    "type": "drag_drop_order",
+    "question_text": "Warum liegt hier Stroh?",
+    "items":
+    {
+    "1":"Ich",
+    "2":"habe",
+    "3":"keine",
+    "4":"Ahnung"    
+    },
+    "comment": "",
+    "casestudy": ""
+  }
