@@ -1,0 +1,12 @@
+{
+    "id": "<Integer>", 
+    "src":"",
+    "type": "",
+    "question_text": "",
+    "items":{
+        "Schlüssel": "Wert", 
+        "Schlüssel2": "Wert2" 
+    }, 
+    "comment": "",
+    "casestudy": ""
+  }

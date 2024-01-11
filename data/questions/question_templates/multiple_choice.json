@@ -1,0 +1,16 @@
+{
+    "id": "<Integer>",
+    "src":"",
+    "type": "multiple_choice",
+    "question_text": "",
+    "items": {
+      "A":"",
+      "B":"",
+      "C":"",
+      "D": "",
+      "E": ""
+    },
+    "correct_answer": ["",""],
+    "comment": "",
+    "casestudy":"" 
+  }

@@ -1,0 +1,22 @@
+{
+    "id": "<Integer>",
+    "src":"",
+    "type": "dropdown",
+    "question_text": "",
+    "items": 
+    {
+        "1":
+        {
+            "text": "",
+            "options": ["","",""]
+        },
+      "2":
+        {
+        "text": "",
+        "options": ["", "", ""]
+      }
+    },
+    "correct_answer": ["",""],
+    "comment": "",
+    "casestudy": ""
+  }
