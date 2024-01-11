@@ -58,10 +58,14 @@
             text-align: left;
         }
 
-        .correct-answer, .user-answer {
+        .correct-answer, .user-answer, .answer-section > div:first-child {
             margin: 5px 0;
             padding-left: 0px;
             font-style: italic;
+        }
+
+        .answer-section > div:first-child {
+            font-weight: bold; /* Fettgedruckt für Überschriften */
         }
 
         ul {
@@ -100,7 +104,7 @@
             <p>{{ question[2] }}</p>
             <div class="answer-section">
                 {% if question[0] == 'dropdown' %}
-                    <div>Antwortmöglichkeiten:</div><br> <!-- Zusätzlicher Text mit Leerzeile -->
+                    <div>Antwortmöglichkeiten:</div><br>
                     {% for item in question[3] %}
                         <div>{{ item['text'] }}:</div>
                         <ul>
@@ -120,7 +124,7 @@
                         {% endfor %}
                     </div>
                 {% elif question[0] == 'multiple_choice' %}
-                    <div>Antwortmöglichkeiten:</div><br> <!-- Zusätzlicher Text mit Leerzeile -->
+                    <div>Antwortmöglichkeiten:</div><br>
                     <ul>
                         {% for key, value in question[3].items() %}
                             <li>{{ key }}: {{ value }}</li>
@@ -129,7 +133,7 @@
                     <div class="correct-answer">Richtige Antwort(en): {{ question[4] | join(', ') }}</div>
                     <div class="user-answer">Deine Antwort(en): {{ question[5] | join(', ') }}</div>
                 {% elif question[0] == 'drag_drop_order' %}
-                    <div>Richtige Reihenfolge:</div><br> <!-- Zusätzlicher Text mit Leerzeile -->
+                    <div>Richtige Reihenfolge:</div><br>
                     <ul>
                         {% for key, value in question[3].items() %}
                             <li>{{ key }}: {{ value }}</li>
@@ -137,11 +141,11 @@
                     </ul>
                     <div class="user-answer">Deine geordnete Antwort: {{ question[4] | join(', ') }}</div>
                 {% elif question[0] == 'drag_drop_pairs' %}
-                    <div>Richtige Paare:</div><br> <!-- Zusätzlicher Text mit Leerzeile -->
+                    <div>Richtige Paare:</div><br>
                     {% for key, value in question[3].items() %}
                         <div>{{ key }} - {{ value }}</div>
                     {% endfor %}
-                    <div class="user-answer">Deine gepaarten Antworten:</div>
+                    <div class="user-answer"><br>Deine gepaarten Antworten:</div> <!-- Leerzeile hinzugefügt -->
                     <ul>
                         {% for key, value in question[4].items() %}
                             <li>{{ key }} - {{ value }}</li>

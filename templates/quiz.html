@@ -22,7 +22,6 @@
                     {% if question.type == 'drag_drop_pairs' %}
                         <div class="pairs-container">
                             <div class="pair-column">
-                                <p>Schlüssel</p>
                                 <ul class="sortable-list" id="keys-list">
                                     {% for key, value in question["items"].items() %}
                                         <li class="sortable-item" data-key="{{ key }}">
@@ -32,7 +31,6 @@
                                 </ul>
                             </div>
                             <div class="pair-column">
-                                <p>Werte</p>
                                 <ul class="sortable-list" id="values-list">
                                     {% for key, value in question["items"].items() %}
                                         <li class="sortable-item" data-key="{{ key }}">

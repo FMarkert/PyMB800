@@ -177,8 +177,12 @@ def results():
     correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
     print(f"user_answers_list = {user_answers_list}")
 
-    # Berechne den Prozentsatz der korrekten Antworten
+        # Berechne den Prozentsatz der korrekten Antworten
     percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
+
+    session['total_questions'] = total_questions
+    session['correct_answers'] = correct_answers
+    session['percentage_correct'] = percentage_correct
 
     return render_template('results.html', user_results=user_results, 
                            total_questions=total_questions, 
@@ -190,13 +194,12 @@ def generate_pdf():
     questions_origin = session.get('questions_origin', [])
     user_results = session.get('user_results', [])
     user_answers_list = session.get('user_answers_list', [])
+    total_questions = session.get('total_questions', [])
+    percentage_correct = session.get('percentage_correct', [])
 
     print_list = utils.generate_print_data(questions_origin,user_answers_list)
-
-    total_questions = len(user_results)
     correct_answers = sum(result[next(iter(result))] for result in user_results if next(iter(result)) in result)
-    percentage_correct = (correct_answers / total_questions) * 100 if total_questions > 0 else 0
-    html_template = render_template('pdf_template.html', questions_origin=questions_origin, user_results=user_results, user_answers_list=user_answers_list, total_questions =total_questions, percentage_correct=percentage_correct, print_list = print_list)
+    html_template = render_template('pdf_template.html', questions_origin=questions_origin, user_results=user_results, user_answers_list=user_answers_list, total_questions =total_questions, percentage_correct=percentage_correct, print_list = print_list, correct_answers = correct_answers)
 
     # Erstellen eines PDFs aus HTML
     pdf = HTML(string=html_template).write_pdf()
